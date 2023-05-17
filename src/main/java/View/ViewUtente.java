@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import Control.ControllerUtente;
 import Control.LogoutController;
+import Model.Segnalazione;
 import Model.Utente;
 
 /**
@@ -61,7 +62,7 @@ public class ViewUtente extends HttpServlet {
 			{
 				System.out.println("UTENTE TROVATO CON RUOLO: "+user.getRuolo());
 				
-				if(user.getRuolo() == 1) {
+			/*	if(user.getRuolo() == 1) {
 					//l'utente è un utente standard per cui può vedere le sue segnalazioni e inserirne una
 					System.out.println(user.toString());
 					response.sendRedirect("segnalazioniUtente.jsp");
@@ -71,21 +72,49 @@ public class ViewUtente extends HttpServlet {
 					System.out.println(user.toString());
 					response.sendRedirect("segnalazioni.jsp");
 				}
-				
+				*/
 				System.out.println("METTO L'UTENTE IN SESSIONE");
-				request.getSession().setAttribute("isLogged", true);
+			/*	request.getSession().setAttribute("isLogged", true);
 				request.getSession().setAttribute("username", username);
+				request.getSession().setAttribute("ruolo", user.getRuolo());*/
+				request.getSession().setAttribute("isLogged", true);
+				request.getSession().setAttribute("utente",user);
+				response.sendRedirect("index.jsp");
 				
 			}
 			else 
 			{
 				System.out.println("Non trovato");
-				response.sendRedirect("login.html");
+				response.sendRedirect("login.jsp");
 			}
 			break;
 		case "Registra":
+			//effettuo la registrazione e recupero l'esito
 			int esito = richiestaReg(request); 
 			System.out.println(esito);
+			//reindirizzo in base all esito
+			switch(esito) {
+			case 1: //caso registrazione avvenuta
+				System.out.println("registrato con successo");
+				response.sendRedirect("index.jsp");
+				break;
+				
+			case 0: //utente già inserito
+				System.out.println();
+				System.out.println("username già presente");
+				response.sendRedirect("index.jsp");
+				break;
+			case -1: //errore nel db
+				System.out.println();
+				System.out.println("Errore nel db");
+				response.sendRedirect("index.jsp");
+				break;
+			}
+			break;
+			
+		case "Invia Segnalazione":
+			
+		
 
 		}
 		
@@ -118,6 +147,13 @@ public int richiestaReg(HttpServletRequest request) {
 	Utente user = new Utente(username, email, pw, Integer.parseInt(ruolo));
 	ControllerUtente reg = new ControllerUtente();
 	esito = reg.registraUtente(user);
+	return esito;
+}
+public int richiestaInvioSegnalazione(HttpServletRequest request) {
+	int esito = 0;
+	String username = (String) request.getSession().getAttribute("username");
+	String fonte = (String) request.getAttribute("fonteSegnalata");
+	String motivo = (String) request.getAttribute("motivo");
 	return esito;
 }
 }

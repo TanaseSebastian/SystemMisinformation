@@ -134,10 +134,10 @@ public int inserisciUtente(Utente user) throws Exception {
 	
 	
 	//funzione che ritorna elenco segnalazioni
-		public ArrayList<Segnalazione> getSegnalazioniUtente(String username) throws Exception 
+		public ArrayList<Segnalazione> getSegnalazioniUtente(Utente user) throws Exception 
 		{
 			ArrayList<Segnalazione> elenco = new ArrayList<Segnalazione>();
-			String sql="SELECT * FROM Segnalazione WHERE mittente = '"+username+"'";
+			String sql="SELECT * FROM Segnalazione WHERE mittente = '"+user.getNome()+"'";
 			rs=query.executeQuery(sql);
 			Segnalazione s;
 
@@ -154,7 +154,7 @@ public int inserisciUtente(Utente user) throws Exception {
 				elenco.add(s);
 			}
 
-			System.out.println("SEGNALAZIONI CARICATE PER L'UTENTE " + username+ "  : " + elenco.size());
+			System.out.println("SEGNALAZIONI CARICATE PER L'UTENTE " + user.getNome()+ "  : " + elenco.size());
 
 			return elenco;
 		}

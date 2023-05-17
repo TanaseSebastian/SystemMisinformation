@@ -54,7 +54,7 @@ public class ControllerUtente {
 		}	
 		//se l'ha trovato
 		if(userFromDB != null) {
-			// se username uguali, non inserisce
+			// se username o email uguali, non inserisce
 			if(userFromDB.getNome() == user.getNome() || userFromDB.getEmail() == user.getEmail() )
 			{
 				return 0;

@@ -35,7 +35,7 @@
 		if(logged == false){
 		%>
 				<li class="nav-item">
-              <a class="nav-link" href="login.html">Accedi</a>
+              <a class="nav-link" href="login.jsp">Accedi</a>
 		<%} 
 		else{
 		%>

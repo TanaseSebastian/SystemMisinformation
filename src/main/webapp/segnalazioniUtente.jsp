@@ -7,12 +7,12 @@
 %>
 <%
 String righe=(String)session.getAttribute("numeroRighe");
-String username=(String)session.getAttribute("username");
+Utente user=(Utente)session.getAttribute("utente");
 if(righe==null){
 	righe="10";
 }
 	DBManager db=new DBManager();
-	elenco = db.getSegnalazioniUtente(username);
+	elenco = db.getSegnalazioniUtente(user);
 	//elenco = (ArrayList<Segnalazione>)request.getAttribute("ELENCO_SEGNALAZIONI");
 %>
 <!DOCTYPE html>
@@ -71,7 +71,7 @@ if(righe==null){
           </ul>
         </div>
       </nav>
-      
+      <a href="inserimentoSegnalazione.jsp">nuova</a>
       <div class = "searchPage">
      	 <div class="input-group mb-3">
   			<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
