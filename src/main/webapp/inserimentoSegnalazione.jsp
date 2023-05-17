@@ -14,7 +14,7 @@
 <body>
 
 	<%@include file="header.jsp"%>
-	<form action= "Viewutente" METOD = "POST">
+	<form action= "Viewutente" METHOD = "POST">
   <div class="form-group">
     <label for="exampleFormControlSelect1">Seleziona Fonte</label>
     <select class="form-control" id="exampleFormControlSelect1" name ="fonteSegnalata">
