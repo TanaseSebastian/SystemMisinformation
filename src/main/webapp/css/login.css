@@ -1,0 +1,21 @@
+body {
+    margin: 0;
+}
+
+.login-div{
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    bottom: 20%;
+    right: 30%;
+    background-color: aliceblue;
+}
+
+.searchPage{
+    position: absolute;
+    top: 10%;
+    left: 15%;
+    bottom: 30%;
+    right: 15%;
+   
+}
