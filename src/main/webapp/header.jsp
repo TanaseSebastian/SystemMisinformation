@@ -27,7 +27,7 @@
             
             <%
 			boolean logged = false;
-			if(session.getAttribute("isLogged") != null && session.getAttribute("username")!= null)
+			if(session.getAttribute("isLogged") != null)
 			{
 				logged = (boolean) session.getAttribute("isLogged");
 			}
