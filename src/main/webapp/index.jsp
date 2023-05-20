@@ -1,14 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@include file="header.jsp"%>
+<%@include file="header.jsp"%>ù
+<html>
+<body>
       
+      <form action="ViewUtente" method="GET" > 
       <div class = "searchPage">
      	 <div class="input-group mb-3">
-  			<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
+  			<input type="text" class="form-control" placeholder="Verifica una notizia" aria-label="Verifica una notizia"" aria-describedby="button-addon2" name="notizia">
   			<div class="input-group-append">
-   			 <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+   			 <input type="submit" class="btn btn-outline-secondary" name="UserAction" value = "Verifica Notizia" id="button-addon2" >
   			</div>
 		</div>
+	</div>
+	</form>
+	<div class="risultatiNews">
+	<% if(session.getAttribute("risultatiNotizia") != null) {%>
+	<%@include file="risultatiNotizia.jsp"%>
+	
+	<%} %>
 	</div>
 </body>
 </html>

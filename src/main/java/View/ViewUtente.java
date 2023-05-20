@@ -2,6 +2,7 @@ package View;
 
 import java.io.IOException;
 import java.io.ObjectInputFilter.Config;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,10 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import Control.ControllerFakeFight;
 import Control.ControllerUtente;
-import Control.LogoutController;
 import Model.Segnalazione;
 import Model.Utente;
+import util.LogoutController;
 
 /**
  * Servlet implementation class GestoreUtente
@@ -37,7 +39,21 @@ public class ViewUtente extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//Prendo il comando dell'utente
-				
+		String userAction = request.getParameter("UserAction");
+		switch(userAction) {
+		case "Verifica Notizia":
+			//recupero la notizia
+			String notizia = request.getParameter("notizia");
+			ControllerFakeFight cff = new ControllerFakeFight();
+			//faccio la ricerca
+			ArrayList<String> risultati = cff.calcoloAttendibilitàNotizia(notizia);
+			request.getSession().setAttribute("risultatiNotizia", risultati);
+			//reindirizzo 
+			response.sendRedirect("index.jsp");
+		}
+		
+		
+		
 	}
 
 	/**
@@ -111,8 +127,8 @@ public class ViewUtente extends HttpServlet {
 				break;
 			}
 			break;
+	
 			
-		case "Invia Segnalazione":
 			
 		
 
