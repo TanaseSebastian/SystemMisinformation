@@ -2,12 +2,12 @@ package Control;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
+import Model.Notizia;
 public class ControllerFakeFight {
 
 	
-public ArrayList<String> calcoloAttendibilitàNotizia(String testo) {
-	ArrayList<String> risultati = new ArrayList<>();
+public ArrayList<Notizia> calcoloAttendibilitàNotizia(String testo) {
+	ArrayList<Notizia> risultati = new ArrayList<>();
 	Ricerca ric = new Ricerca();
 	
 	//Recupero informazioni principali e controlli vari
@@ -25,7 +25,7 @@ public ArrayList<String> calcoloAttendibilitàNotizia(String testo) {
 	if (risultati.isEmpty()) 
 	{
 		System.out.println("Nessuna notizia trovata");
-		risultati.add("Nessun risultato");
+	//	risultati.add("Nessun risultato");
 	
 	}
 	return risultati;

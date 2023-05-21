@@ -17,7 +17,7 @@ import Control.ControllerUtente;
 import Model.Segnalazione;
 import Model.Utente;
 import util.LogoutController;
-
+import Model.Notizia;
 /**
  * Servlet implementation class GestoreUtente
  */
@@ -46,7 +46,7 @@ public class ViewUtente extends HttpServlet {
 			String notizia = request.getParameter("notizia");
 			ControllerFakeFight cff = new ControllerFakeFight();
 			//faccio la ricerca
-			ArrayList<String> risultati = cff.calcoloAttendibilitàNotizia(notizia);
+			ArrayList<Notizia> risultati = cff.calcoloAttendibilitàNotizia(notizia);
 			request.getSession().setAttribute("risultatiNotizia", risultati);
 			//reindirizzo 
 			response.sendRedirect("index.jsp");
