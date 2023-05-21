@@ -15,7 +15,7 @@
 	</div>
 	</form>
 	<div class="risultatiNews">
-	<%@include file ="risultatiNotizia.jsp" %>
+	<%@include file ="stampaRisultatiNews.jsp" %>
 	</div>
 </body>
 </html>
