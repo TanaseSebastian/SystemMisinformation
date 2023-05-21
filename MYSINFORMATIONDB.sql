@@ -20,6 +20,7 @@ titolo varchar(50),
 descrizione varchar(200),
 mittente varchar(50),
 fonte_segnalata int,
+stato int,
 foreign key (mittente) REFERENCES utente(username),
 foreign key (fonte_segnalata) references fonte(id_fonte)
 );

@@ -61,7 +61,7 @@ if(righe==null){
 		<%} 
 		else{
 		%>
-			<a class="nav-link" href="#">Account di <%= username %></a>
+			<a class="nav-link" href="#">Account di <%= user.getNome() %></a>
 			<li>
 			<a class="nav-link" href="logout">Logout</a>
 			</li>
