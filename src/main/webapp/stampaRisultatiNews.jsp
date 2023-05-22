@@ -32,21 +32,27 @@ else {
 		for(int i = 0; i < visualizzaRisultati.size(); i++) 
 		{%>
 			<% Notizia news = (Notizia)visualizzaRisultati.get(i); %>
-			<div class="card" style="width: 18rem; width: 100%">
- 				<img class="card-img-top" src="<%=news.getImg() %>" alt="Card image cap">
- 				<div class="card-body">
-    				<h5 class="card-title"><%=news.getTitolo()%></h5>
-    				<p class="card-text"><%=news.getDescrizione()%></p>
-    				<a href="#" class="btn btn-primary" ><%=news.getAutore()%>  <%=news.getData() %></a>
-  	   		 	</div>
-  			</div>
+			<div class="card" >
+			  <div class="card-body">
+			    <h5 class="card-title"><%=news.getTitolo()%></h5>
+			    <p class="card-text"><%=news.getDescrizione()%></p>
+			    <p class="card-text"><small class="text-muted"><%=news.getData()%></small></p>
+			  </div>
+			  <img class="card-img-bottom" src="<%=news.getImg()%>" alt="Img non disponibile" width="500" height="500" >
+			</div>
+			<br>
 	<%}%>
 <%} catch(Exception e){} %>
+	<nav aria-label="...">
+  <ul class="pagination pagination-lg">
 <%
 	int pagineTot = (int) Math.ceil((double)risultati.size() / pageSize);
 	for (int i = 1; i <= pagineTot; i++) 
 		{ %>
-		<a href="RisultatiNews.jsp?page=<%= i %>"><%= i %></a>
-	<% } %>
+    <li class="page-item"><a class="page-link" href="RisultatiNews.jsp?page=<%= i %>"><%= i %></a></li>
 
+		
+	<% } %>
 <% } %>
+  </ul>
+</nav>

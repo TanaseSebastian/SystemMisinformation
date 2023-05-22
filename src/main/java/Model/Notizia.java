@@ -8,6 +8,9 @@ public class Notizia {
 	private String autore;
 	private String data;
 	
+	public Notizia() {
+		
+	}
 	public Notizia(String img, String titolo, String descrizione, String autore,String data)
 	{
 		super();

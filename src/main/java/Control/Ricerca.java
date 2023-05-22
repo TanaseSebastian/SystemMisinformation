@@ -63,6 +63,7 @@ public class Ricerca {
 			Document doc = Jsoup.connect(url).get();
 			Elements factCheckCards = doc.getElementsByClass("title j-title");
 			for (Element card : factCheckCards) {
+				Notizia news = new Notizia();
 				// Estraggo il link per connettermi alla pagine e recuperare le info
 				String link = card.getElementsByAttribute("href").attr("href");
 
@@ -81,11 +82,14 @@ public class Ricerca {
 					title = card2.getElementsByClass("titleArticle j-Article").text();
 					title += ", " + card2.getElementsByClass("subtitleArticle").text();
 					data = card2.getElementsByAttribute("datetime").text();
-
+					news.setTitolo(title);
+					news.setData(data);
 					//Prendo l'immagine del post
 					Element img = doc2.getElementById("post-thumbnail");
 					try {
 						imgURL = img.getAllElements().attr("data-src");	
+						System.out.println(imgURL);
+						news.setImg(imgURL);
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
@@ -96,31 +100,34 @@ public class Ricerca {
 					int maxRighe = 4;
 					int i = 0;
 					for (Element card3 : descrizioni) {
-						descrizione += card3.getAllElements().text() + "\n";
-						i++;
-						if(i > maxRighe)
+
+						if(i < maxRighe)
 						{
-							break;
+							descrizione += card3.getAllElements().text() + "\n";
+							i++;
 						}
+						
 
 					}
-					Notizia news = new Notizia(imgURL, title, descrizione, data, "");
+					news.setDescrizione(descrizione);
+					risultati.add(news);
+					//reinizialliza parametri
 					i = 0;
 					descrizione = "";
-					risultati.add(news);
+					
 				}
 				
-				//break;
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		//Stampo
-		System.out.println("Titolo = " + title);
+/*		System.out.println("Titolo = " + title);
 		System.out.println("Data Post = " + data);
 		System.out.println("Descrizione = " + descrizione);
 		System.out.println("Img = " + imgURL);
-
+*/
 		return risultati;
 	}
 }
