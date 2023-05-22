@@ -14,9 +14,11 @@ import javax.servlet.http.HttpSession;
 
 import Control.ControllerFakeFight;
 import Control.ControllerUtente;
+import Control.DBManager;
 import Model.Segnalazione;
 import Model.Utente;
 import util.LogoutController;
+import Model.Fonte;
 import Model.Notizia;
 /**
  * Servlet implementation class GestoreUtente
@@ -25,13 +27,13 @@ import Model.Notizia;
 public class ViewUtente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ViewUtente() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public ViewUtente() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -51,9 +53,9 @@ public class ViewUtente extends HttpServlet {
 			//reindirizzo 
 			response.sendRedirect("RisultatiNews.jsp?page=1");
 		}
-		
-		
-		
+
+
+
 	}
 
 	/**
@@ -63,11 +65,12 @@ public class ViewUtente extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 		String username = request.getParameter("username");
-		
+		System.out.println("sono entrato nella view");
+
 		//Prendo il comando dell'utente
 		String userAction = request.getParameter("UserAction");
 		//System.out.println(userAction);
-		
+
 		switch(userAction) {
 		case "login": 
 			//Recupero campi inseriti
@@ -77,8 +80,8 @@ public class ViewUtente extends HttpServlet {
 			if( user != null) 
 			{
 				System.out.println("UTENTE TROVATO CON RUOLO: "+user.getRuolo());
-				
-			/*	if(user.getRuolo() == 1) {
+
+				/*	if(user.getRuolo() == 1) {
 					//l'utente è un utente standard per cui può vedere le sue segnalazioni e inserirne una
 					System.out.println(user.toString());
 					response.sendRedirect("segnalazioniUtente.jsp");
@@ -88,16 +91,16 @@ public class ViewUtente extends HttpServlet {
 					System.out.println(user.toString());
 					response.sendRedirect("segnalazioni.jsp");
 				}
-				*/
+				 */
 				System.out.println("METTO L'UTENTE IN SESSIONE");
-			/*	request.getSession().setAttribute("isLogged", true);
+				/*	request.getSession().setAttribute("isLogged", true);
 				request.getSession().setAttribute("username", username);
 				request.getSession().setAttribute("ruolo", user.getRuolo());*/
 				request.getSession().setAttribute("isLogged", true);
 				request.getSession().setAttribute("utente",user);
 				request.getSession().setAttribute("username",username);
 				response.sendRedirect("index.jsp");
-				
+
 			}
 			else 
 			{
@@ -115,7 +118,7 @@ public class ViewUtente extends HttpServlet {
 				System.out.println("registrato con successo");
 				response.sendRedirect("index.jsp");
 				break;
-				
+
 			case 0: //utente già inserito
 				System.out.println();
 				System.out.println("username già presente");
@@ -128,49 +131,72 @@ public class ViewUtente extends HttpServlet {
 				break;
 			}
 			break;
-	
-			
-			
-		
+			case "inviaSegnalazione":
+			try {
+				richiestaInvioSegnalazione(request);
+				response.sendRedirect("index.jsp");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+
 
 		}
-		
-		
-	}
-public Utente richiestaLogin(HttpServletRequest request) {
-	Utente user = null;
-	String username = request.getParameter("username");
-	String pw = request.getParameter("pw");
-	ControllerUtente log = new ControllerUtente();
-	try {
-		//Invio dati inseriti alla classe che fa il login e ricevo l'utente corrispondente
-		user = log.effettuaLogin(username, pw);
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	return user;
-}
 
-public int richiestaReg(HttpServletRequest request) {
-	int esito = 0;
-	//recupero dati dal form
-	String username = request.getParameter("username");
-	String pw = request.getParameter("pw");
-	String email = request.getParameter("email");
-	String ruolo = request.getParameter("ruolo");
-	
-	//creazione utente
-	Utente user = new Utente(username, email, pw, Integer.parseInt(ruolo));
-	ControllerUtente reg = new ControllerUtente();
-	esito = reg.registraUtente(user);
-	return esito;
-}
-public int richiestaInvioSegnalazione(HttpServletRequest request) {
-	int esito = 0;
-	String username = (String) request.getSession().getAttribute("username");
-	String fonte = (String) request.getAttribute("fonteSegnalata");
-	String motivo = (String) request.getAttribute("motivo");
-	return esito;
-}
+
+	}
+	public Utente richiestaLogin(HttpServletRequest request) {
+		Utente user = null;
+		String username = request.getParameter("username");
+		String pw = request.getParameter("pw");
+		ControllerUtente log = new ControllerUtente();
+		try {
+			//Invio dati inseriti alla classe che fa il login e ricevo l'utente corrispondente
+			user = log.effettuaLogin(username, pw);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
+	}
+
+	public int richiestaReg(HttpServletRequest request) {
+		int esito = 0;
+		//recupero dati dal form
+		String username = request.getParameter("username");
+		String pw = request.getParameter("pw");
+		String email = request.getParameter("email");
+		String ruolo = request.getParameter("ruolo");
+
+		//creazione utente
+		Utente user = new Utente(username, email, pw, Integer.parseInt(ruolo));
+		ControllerUtente reg = new ControllerUtente();
+		esito = reg.registraUtente(user);
+		return esito;
+	}
+
+
+
+	public int richiestaInvioSegnalazione(HttpServletRequest request) throws Exception {
+		int esito = 0;
+		String mittente = (String) request.getParameter("mittente");
+		System.out.println(mittente);
+		String descrizione = (String) request.getParameter("descrizione");
+		System.out.println(descrizione);
+		String titolo = (String) request.getParameter("titolo");
+		System.out.println(titolo);
+		String fonte = (String) request.getParameter("fonteSegnalata");
+		System.out.println(fonte);
+		Segnalazione s = new Segnalazione();
+		s.setIdFonteSegnalata(Integer.parseInt(fonte));
+		s.setDescrizione(descrizione);
+		s.setTitolo(titolo);
+		s.setMittente(mittente);
+		System.out.println("richiesta invio segnalazione: "+ s.toString());
+		DBManager db = new DBManager();
+		db.inserisciSegnalazione(s);
+		System.out.println("inserimento segnalazione eseguito con successo");
+		return esito;
+	}
 }
