@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="UTF-8"%>
-<%@include file="header.jsp"%>
+<%@include file="header.jsp"%>ù
 <html>
 <body>
       
@@ -15,7 +15,7 @@
 	</div>
 	</form>
 	<div class="risultatiNews">
-	
+	<%@include file ="stampaRisultatiNews.jsp" %>
 	</div>
 </body>
 </html>

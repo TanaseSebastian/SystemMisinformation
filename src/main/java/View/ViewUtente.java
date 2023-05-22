@@ -51,7 +51,7 @@ public class ViewUtente extends HttpServlet {
 			ArrayList<Notizia> risultati = cff.calcoloAttendibilitàNotizia(notizia);
 			request.getSession().setAttribute("risultatiNotizia", risultati);
 			//reindirizzo 
-			response.sendRedirect("index.jsp");
+			response.sendRedirect("RisultatiNews.jsp?page=1");
 		}
 
 
