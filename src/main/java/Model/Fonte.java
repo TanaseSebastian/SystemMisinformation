@@ -3,6 +3,9 @@ package Model;
 public class Fonte {
 
 	private int id_Fonte;
+	public Fonte() {
+		super();
+	}
 	private String nome;
 	private String url;
 	private float indice;

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Vector;
 
+import Model.Fonte;
 import Model.Segnalazione;
 import Model.Utente;
 public class DBManager {
@@ -158,6 +159,47 @@ public int inserisciUtente(Utente user) throws Exception {
 
 			return elenco;
 		}
+
+		public int inserisciSegnalazione(Segnalazione segnalazione) throws Exception {
+			int nrighe=0;	
+			String sqlcommand1 = "insert into segnalazione(titolo, descrizione, mittente, fonte_segnalata, stato) values(?,?,?,?,?);";
+			PreparedStatement ps = connessione.prepareStatement(sqlcommand1);
+			ps.setString(1, segnalazione.getTitolo());
+			ps.setString(2, segnalazione.getDescrizione());
+			ps.setString(3, segnalazione.getMittente());
+			ps.setInt(4, segnalazione.getIdFonteSegnalata());
+			ps.setInt(5, 0);
+			nrighe = ps.executeUpdate();
+			return nrighe;
+			}
+		
+		
+			//funzione che ritorna elenco fonti
+				public ArrayList<Fonte> getFonti() throws Exception 
+				{
+					ArrayList<Fonte> elenco = new ArrayList<Fonte>();
+					String sql="SELECT * FROM Fonte";
+					rs=query.executeQuery(sql);
+					Fonte f;
+
+					while(rs.next())
+					{
+						
+						f= new Fonte();
+						f.setId_Fonte(rs.getInt("id_fonte"));
+						f.setNome(rs.getString("nome"));
+						f.setUrl(rs.getString("url"));
+						f.setIndice(rs.getFloat("indice"));
+						
+						elenco.add(f);
+					}
+
+					System.out.println("FONTI CARICATE : " + elenco.size());
+					for(int i=0; i<elenco.size();i++){
+						System.out.println(elenco.get(i).getNome());
+					}
+					return elenco;
+				}
 
 
 
