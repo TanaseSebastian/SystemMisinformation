@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 import java.io.*;
 
 import Model.Notizia;
-public class Ricerca {
+public class RicercaMultimediale {
 
 	public ArrayList<Notizia> ricercaNotizia(String testo) throws IOException {
 		ArrayList<Notizia> risultati = new ArrayList<Notizia>();

@@ -18,6 +18,7 @@
   <%@include file="header.jsp"%>
     
     <div class="login-div">
+      <%@include file="loginDisplayMsg.jsp"%>
         <form action = "ViewUtente" method = "POST">
             <br>
             <div class="form-group">

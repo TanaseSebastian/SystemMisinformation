@@ -5,9 +5,9 @@ import Model.Utente;
 /**
  * Classe che si occupa di effettuare il login tra i vari utenti nel sistema
  */
-public class ControllerUtente {
+public class GestoreAutenticazione {
 
-	public ControllerUtente() {
+	public GestoreAutenticazione() {
 		
 	}
 	

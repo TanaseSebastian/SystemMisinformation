@@ -8,9 +8,9 @@ import Model.Segnalazione;
 /**
  * Classe che si occupa di effettuare il login tra i vari utenti nel sistema
  */
-public class ControllerSegnalazioni {
+public class GestoreSegnalazioni {
 
-	public ControllerSegnalazioni() {
+	public GestoreSegnalazioni() {
 		
 	}
 	

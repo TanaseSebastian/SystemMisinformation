@@ -3,12 +3,12 @@ package Control;
 import java.io.IOException;
 import java.util.ArrayList;
 import Model.Notizia;
-public class ControllerFakeFight {
+public class CalcoloAttendibilitàNotizia {
 
 	
 public ArrayList<Notizia> calcoloAttendibilitàNotizia(String testo) {
 	ArrayList<Notizia> risultati = new ArrayList<>();
-	Ricerca ric = new Ricerca();
+	RicercaMultimediale ric = new RicercaMultimediale();
 	
 	//Recupero informazioni principali e controlli vari
 	
@@ -30,4 +30,5 @@ public ArrayList<Notizia> calcoloAttendibilitàNotizia(String testo) {
 	}
 	return risultati;
 }
+
 }

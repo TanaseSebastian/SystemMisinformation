@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import Control.ControllerFakeFight;
-import Control.ControllerUtente;
+import Control.CalcoloAttendibilitàNotizia;
+import Control.GestoreAutenticazione;
 import Control.DBManager;
 import Model.Segnalazione;
 import Model.Utente;
@@ -46,7 +46,7 @@ public class ViewUtente extends HttpServlet {
 		case "Verifica Notizia":
 			//recupero la notizia
 			String notizia = request.getParameter("notizia");
-			ControllerFakeFight cff = new ControllerFakeFight();
+			CalcoloAttendibilitàNotizia cff = new CalcoloAttendibilitàNotizia();
 			//faccio la ricerca
 			ArrayList<Notizia> risultati = cff.calcoloAttendibilitàNotizia(notizia);
 			request.getSession().setAttribute("risultatiNotizia", risultati);
@@ -104,7 +104,9 @@ public class ViewUtente extends HttpServlet {
 			}
 			else 
 			{
+				// login error 1 = utente non trovato
 				System.out.println("Non trovato");
+				request.getSession().setAttribute("login-error", 1);
 				response.sendRedirect("login.jsp");
 			}
 			break;
@@ -150,7 +152,7 @@ public class ViewUtente extends HttpServlet {
 		Utente user = null;
 		String username = request.getParameter("username");
 		String pw = request.getParameter("pw");
-		ControllerUtente log = new ControllerUtente();
+		GestoreAutenticazione log = new GestoreAutenticazione();
 		try {
 			//Invio dati inseriti alla classe che fa il login e ricevo l'utente corrispondente
 			user = log.effettuaLogin(username, pw);
@@ -171,7 +173,7 @@ public class ViewUtente extends HttpServlet {
 
 		//creazione utente
 		Utente user = new Utente(username, email, pw, Integer.parseInt(ruolo));
-		ControllerUtente reg = new ControllerUtente();
+		GestoreAutenticazione reg = new GestoreAutenticazione();
 		esito = reg.registraUtente(user);
 		return esito;
 	}
