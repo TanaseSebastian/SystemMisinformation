@@ -31,7 +31,7 @@
             
             <%
 			boolean logged = false;
-			if(session.getAttribute("isLogged") != null)
+			if(session.getAttribute("isLogged") != null && session.getAttribute("username") != null) 
 			{
 				logged = (boolean) session.getAttribute("isLogged");
 			}
@@ -44,7 +44,14 @@
 		else{
 		%>
 			<li class="nav-item">
+				<%
+				//System.out.println("ruolo dell'utente "+session.getAttribute("ruolo"));
+				if(session.getAttribute("ruolo").equals(0)){
+				%>
               <a class="nav-link" href="segnalazioniUtente.jsp">Segnalazioni</a>
+              <%}else if(session.getAttribute("ruolo").equals(1)) {%>
+              <a class="nav-link" href="segnalazioni.jsp">Segnalazioni</a>
+              <%} %>
             </li>
 			<li class="nav-item">
 			<a class="nav-link" href="#">Account di <%= session.getAttribute("username") %></a>
