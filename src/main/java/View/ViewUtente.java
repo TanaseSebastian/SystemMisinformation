@@ -99,6 +99,7 @@ public class ViewUtente extends HttpServlet {
 				request.getSession().setAttribute("isLogged", true);
 				request.getSession().setAttribute("utente",user);
 				request.getSession().setAttribute("username",username);
+				request.getSession().setAttribute("ruolo",user.getRuolo());
 				response.sendRedirect("index.jsp");
 
 			}

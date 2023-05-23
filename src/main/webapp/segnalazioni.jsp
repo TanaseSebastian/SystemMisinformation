@@ -31,7 +31,6 @@ if(righe==null){
 <body>
 
 <%@include file="header.jsp"%>
-      <a href="inserimentoSegnalazione.jsp">Inserisci segnalazione</a>
       <div class = "searchPage">
      	 <div class="input-group mb-3">
   			<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
