@@ -28,10 +28,10 @@ else {
   		Risultati trovati: <%=risultati.size()%>
 		</div>
 		<%
-
+		int offset = 0;
 		for(int i = 0; i < visualizzaRisultati.size(); i++) 
-		{%>
-			<% Notizia news = (Notizia)visualizzaRisultati.get(i); %>
+		{	
+			Notizia news = (Notizia)visualizzaRisultati.get(i); %>
 			<div class="card" >
 			  <div class="card-body">
 			    <h5 class="card-title"><%=news.getTitolo()%></h5>
@@ -41,7 +41,8 @@ else {
 			  <img class="card-img-bottom" src="<%=news.getImg()%>" alt="Img non disponibile" width="500" height="500" >
 			</div>
 			<br>
-	<%}%>
+			<%}%>
+
 <%} catch(Exception e){} %>
 	<nav aria-label="...">
   <ul class="pagination pagination-lg">
