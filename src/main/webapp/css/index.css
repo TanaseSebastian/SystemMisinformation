@@ -1,5 +1,7 @@
 @charset "ISO-8859-1";
-
+body{
+	background-image: url(img/background.jpg);
+}
 .risultatiNews{
 	position: absolute;
 	top: 20%;

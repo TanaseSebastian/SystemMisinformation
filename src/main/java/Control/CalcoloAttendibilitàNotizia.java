@@ -6,7 +6,8 @@ import Model.Notizia;
 public class CalcoloAttendibilitàNotizia {
 
 	
-public ArrayList<Notizia> calcoloAttendibilitàNotizia(String testo) {
+public ArrayList<Notizia> calcoloAttendibilitàNotizia(String testo)
+{
 	ArrayList<Notizia> risultati = new ArrayList<>();
 	RicercaMultimediale ric = new RicercaMultimediale();
 	
@@ -31,4 +32,8 @@ public ArrayList<Notizia> calcoloAttendibilitàNotizia(String testo) {
 	return risultati;
 }
 
+public String estrazioneContenutoTestuale(String testo) {
+	String contenutoEstratto;
+	
+}
 }
