@@ -20,10 +20,25 @@ import Model.Utente;
 import util.LogoutController;
 import Model.Fonte;
 import Model.Notizia;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 /**
  * Servlet implementation class GestoreUtente
  */
 @WebServlet("/ViewUtente")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+maxFileSize = 1024 * 1024 * 10,      // 10MB
+maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class ViewUtente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -44,14 +59,23 @@ public class ViewUtente extends HttpServlet {
 		String userAction = request.getParameter("UserAction");
 		switch(userAction) {
 		case "Verifica Notizia":
-			//recupero la notizia
+			//recupero la notizia e la tipologia
+			String tipoRicerca = request.getParameter("opzioniRicerca");
 			String notizia = request.getParameter("notizia");
-			CalcoloAttendibilitàNotizia cff = new CalcoloAttendibilitàNotizia();
-			//faccio la ricerca
-			ArrayList<Notizia> risultati = cff.calcoloAttendibilitàNotizia(notizia);
-			request.getSession().setAttribute("risultatiNotizia", risultati);
-			//reindirizzo 
-			response.sendRedirect("RisultatiNews.jsp?page=1");
+			if(tipoRicerca.equals("testuale")) {
+				//eseguo ricerca testuale
+				CalcoloAttendibilitàNotizia cff = new CalcoloAttendibilitàNotizia();
+				//faccio la ricerca
+				ArrayList<Notizia> risultati = cff.calcoloAttendibilitàNotizia(notizia);
+				request.getSession().setAttribute("risultatiNotizia", risultati);
+				//reindirizzo 
+				response.sendRedirect("RisultatiNews.jsp?page=1");				
+			}
+			else if (tipoRicerca.equals("url")) {
+				
+			}
+			break;
+
 		}
 
 
@@ -143,12 +167,16 @@ public class ViewUtente extends HttpServlet {
 				e.printStackTrace();
 			}
 			break;
-
-
+			
+		      
+		    }
 		}
+		
 
 
-	}
+	
+
+
 	public Utente richiestaLogin(HttpServletRequest request) {
 		Utente user = null;
 		String username = request.getParameter("username");
