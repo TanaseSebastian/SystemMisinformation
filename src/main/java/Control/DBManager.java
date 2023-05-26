@@ -123,7 +123,7 @@ public int inserisciUtente(Utente user) throws Exception {
 			s.setDescrizione(rs.getString("descrizione"));
 			s.setMittente(rs.getString("mittente"));
 			s.setIdFonteSegnalata(rs.getInt("fonte_segnalata"));
-			
+			s.setStato(rs.getInt("stato"));
 			elenco.add(s);
 		}
 
@@ -151,7 +151,7 @@ public int inserisciUtente(Utente user) throws Exception {
 				s.setDescrizione(rs.getString("descrizione"));
 				s.setMittente(rs.getString("mittente"));
 				s.setIdFonteSegnalata(rs.getInt("fonte_segnalata"));
-				
+				s.setStato(rs.getInt("stato"));
 				elenco.add(s);
 			}
 
@@ -199,6 +199,58 @@ public int inserisciUtente(Utente user) throws Exception {
 						System.out.println(elenco.get(i).getNome());
 					}
 					return elenco;
+				}
+
+				public Segnalazione getSegnalazionebyId(String id) throws SQLException {
+					Segnalazione s = new Segnalazione();
+					String sql="SELECT * FROM Segnalazione where id_segnalazione = "+id;
+					System.out.println("sql che sto eseguendo: "+ sql);
+					rs=query.executeQuery(sql);
+					while(rs.next())
+					{
+						s.setDescrizione(rs.getString("descrizione"));
+						s.setIdFonteSegnalata(rs.getInt("fonte_segnalata"));
+						s.setIdSegnalazione(rs.getInt("id_segnalazione"));
+						s.setMittente(rs.getString("mittente"));
+						s.setStato(rs.getInt("stato"));
+						s.setTitolo(rs.getString("titolo"));
+					}
+					System.out.println("SEGNALAZIONE TROVATA");
+					return s;
+				}
+				
+				
+				public String getNomeFontebyId(int id) throws SQLException {
+					String s = null;
+					String sql="SELECT nome FROM fonte where id_fonte = "+id;
+					System.out.println("sql che sto eseguendo: "+ sql);
+					rs=query.executeQuery(sql);
+					while(rs.next())
+					{
+						s = rs.getString("nome");
+						
+					}
+					System.out.println("SEGNALAZIONE TROVATA");
+					return s;
+				}
+
+				public int modificaStatoSegnalazione(int id, int i) throws SQLException {
+					// TODO Auto-generated method stub
+					int nrighe=0;	
+					String sqlcommand1 = "UPDATE segnalazione set stato = ?  where id_segnalazione = ?;";
+					PreparedStatement ps = connessione.prepareStatement(sqlcommand1);
+					ps.setInt(1, i);
+					ps.setInt(2, id);
+					System.out.println("query che sto eseguendo : "+ps);
+					nrighe = ps.executeUpdate();
+					
+					if(nrighe >= 1) 
+						System.out.println("update eseguito correttamente"); 
+					else
+						 System.out.println("update non eseguito");;
+		
+						
+					return nrighe;
 				}
 
 

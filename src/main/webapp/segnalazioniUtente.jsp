@@ -41,78 +41,86 @@ if(righe==null){
 </head>
 <body>
 
-<%@include file="header.jsp"%>
+	<%@include file="header.jsp"%>
 
 
 
-			<!-- Dynamic Table Full -->
-			<div class="block">
-				<div class="block-header block-header-default">
-					<h3 class="block-title">Tabella SEGNALAZIONI</h3>
-				</div>
-				<div class="table-responsive">
-					
-						<!-- DataTables -->
-						<table class="table table-bordered table-striped table-vcenterd"
-							id="dataTable" width="100%" cellspacing="0"
-							data-page-length=<%=righe%>>
-							<%request.getSession().setAttribute("numeroRighe", "10"); %>
-							<thead>
+	<!-- Dynamic Table Full -->
+	<div class="block">
+		<div class="block-header block-header-default">
+			<h3 class="block-title">Tabella SEGNALAZIONI</h3>
+		</div>
+		<div class="table-responsive">
 
-								<div style="margin-bottom: 10px; margin-top: 20px;"">
-								<button type="submit" class="btn btn-primary"
-											name="UserAction" value="inserisciSegnalazione"><a style="text-decoration:none; color:white;"  href="inserimentoSegnalazione.jsp">Inserisci nuova segnalazione</a></button>
-								</div>
-								<div style="margin-bottom: 10px; margin-top: 20px;""></div>
-								<tr>
+			<!-- DataTables -->
+			<table class="table table-bordered table-striped table-vcenterd"
+				id="dataTable" width="100%" cellspacing="0"
+				data-page-length=<%=righe%>>
+				<%request.getSession().setAttribute("numeroRighe", "10"); %>
+				<thead>
 
-									<th><input type="checkbox" id="checkboxAll"
-										onclick='$(".check").prop("checked",$ (this).prop("checked"));'>Seleziona
-										tutto</th>
-									<th>Dettagli</th>
-									<th>Codice Segnalazione</th>
-									<th>Titolo</th>
-									<th>Descrizione</th>
-									<th>Mittente</th>
-									<th>Fonte Segnalata</th>
-									<th>valida</th>
-								</tr>
-							</thead>
-							<tbody>
-								<% 										  
+					<div style="margin-bottom: 10px; margin-top: 20px;"">
+						<button type="submit" class="btn btn-primary" name="UserAction"
+							value="inserisciSegnalazione">
+							<a style="text-decoration: none; color: white;"
+								href="inserimentoSegnalazione.jsp">Inserisci nuova
+								segnalazione</a>
+						</button>
+					</div>
+					<div style="margin-bottom: 10px; margin-top: 20px;""></div>
+					<tr>
+
+						<th><input type="checkbox" id="checkboxAll"
+							onclick='$(".check").prop("checked",$ (this).prop("checked"));'>Seleziona
+							tutto</th>
+						<th>Dettagli</th>
+						<th>Codice Segnalazione</th>
+						<th>Titolo</th>
+						<th>Descrizione</th>
+						<th>Mittente</th>
+						<th>Fonte Segnalata</th>
+						<th>valida</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% 										  
 										  for(i=0;i<elenco.size();i++) 
 										    {
 											 s=(Segnalazione)elenco.get(i);
 										    
 										 %>
-								<tr>
-									<td><input type="checkbox" class="check" name="check"
-										value="<%=s.getIdSegnalazione()%>"></td>
+					<tr>
+						<td><input type="checkbox" class="check" name="check"
+							value="<%=s.getIdSegnalazione()%>"></td>
 
-									<td><a
-										href="gestutenti?cmd=dettagli&id=<%=s.getIdSegnalazione()%>"><i
-											class="fa fa-info-circle" aria-hidden="true"></i></a></td>
-									<td><%=s.getIdSegnalazione()%></td>
-									<td><%=s.getTitolo()%></td>
-									<td><%=s.getDescrizione()%></td>
-									<td><%= s.getMittente()%></td>
-									<td><%=s.getIdFonteSegnalata()%></td>
-									<td><a
-										href="gestutenti?cmd=aggiorna&tipoutente=dipendente&id=<%=s.getIdSegnalazione()%>"><i
-											class="fa fa-pencil" aria-hidden="true"></i></a></td>
-								</tr>
+						<td><a
+							href="gestutenti?cmd=dettagli&id=<%=s.getIdSegnalazione()%>"><i
+								class="fa fa-info-circle" aria-hidden="true"></i>Dettagli</a></td>
+						<td><%=s.getIdSegnalazione()%></td>
+						<td><%=s.getTitolo()%></td>
+						<td><%=s.getDescrizione()%></td>
+						<td><%= s.getMittente()%></td>
+						<td><%=s.getIdFonteSegnalata()%></td>
+						<% if(s.getStato()==0){ %>
+						<td>in attessa di validazione</td>
+						<%}else if(s.getStato()==1){%>
+						<td>segnalazione validata</td>
+						<%}else if(s.getStato()==2){%>
+						<td>segnalazione declinata</td>
+						<%} %>
+					</tr>
 
-								<%
+					<%
 										     }
 										 %>
-							</tbody>
-						</table>
-					
-				</div>
-			</div>
-			<!-- END Dynamic Table Full -->
+				</tbody>
+			</table>
+
 		</div>
-		<!-- END Page Content -->
+	</div>
+	<!-- END Dynamic Table Full -->
+	</div>
+	<!-- END Page Content -->
 
 	</div>
 </body>

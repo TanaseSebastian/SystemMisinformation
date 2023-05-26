@@ -91,13 +91,19 @@ if(righe==null){
 						<tr>
  							<td><input type="checkbox" class="check" name="check" value="<%=s.getIdSegnalazione()%>"></td>
  													
- 							<td><a href="gestutenti?cmd=dettagli&id=<%=s.getIdSegnalazione()%>"><i class="fa fa-info-circle" aria-hidden="true"></i></a></td>
+ 							<td><a href="gestutenti?cmd=dettagli&id=<%=s.getIdSegnalazione()%>"><i class="fa fa-info-circle" aria-hidden="true"></i>Dettagli</a></td>
 							<td><%=s.getIdSegnalazione()%></td>
 							<td><%=s.getTitolo()%></td>
 							<td><%=s.getDescrizione()%></td>
-							<td><%= s.getMittente()%></td>
+							<td><%=s.getMittente()%></td>
 							<td><%=s.getIdFonteSegnalata()%></td>
-							<td><a href="gestutenti?cmd=aggiorna&tipoutente=dipendente&id=<%=s.getIdSegnalazione()%>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+							<% if(s.getStato()==0){ %>
+							<td><a href="viewSegnalazioni?cmd=valida&id=<%=s.getIdSegnalazione()%>"><i class="fa fa-info-circle" aria-hidden="true"></i>valida questa segnalazione</a></td>	
+							<%}else if(s.getStato()==1){%>	
+							<td>segnalazione validata</td>	
+							<%}else if(s.getStato()==2){%>
+							<td>segnalazione declinata</td>	
+							<%} %>						
 						</tr>
 
 						<%
