@@ -51,6 +51,8 @@
               <a class="nav-link" href="segnalazioniUtente.jsp">Segnalazioni</a>
               <%}else if(session.getAttribute("ruolo").equals(1)) {%>
               <a class="nav-link" href="segnalazioni.jsp">Segnalazioni</a>
+              <%}else if(session.getAttribute("ruolo").equals(2)) {%>
+              <a class="nav-link" href="amministrazione.jsp">Amministrazione</a>
               <%} %>
             </li>
 			<li class="nav-item">

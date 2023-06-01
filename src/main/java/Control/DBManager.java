@@ -93,7 +93,7 @@ public int inserisciUtente(Utente user) throws Exception {
 	int nrighe=0;	
 	String sqlcommand1 = "insert into utente values(?,?,?,?);";
 	PreparedStatement ps = connessione.prepareStatement(sqlcommand1);
-	ps.setString(1, user.getNome());
+	ps.setString(1, user.getUsername());
 	ps.setString(2, user.getEmail());
 	ps.setString(3, user.getPw());
 	ps.setInt(4, user.getRuolo());
@@ -138,7 +138,7 @@ public int inserisciUtente(Utente user) throws Exception {
 		public ArrayList<Segnalazione> getSegnalazioniUtente(Utente user) throws Exception 
 		{
 			ArrayList<Segnalazione> elenco = new ArrayList<Segnalazione>();
-			String sql="SELECT * FROM Segnalazione WHERE mittente = '"+user.getNome()+"'";
+			String sql="SELECT * FROM Segnalazione WHERE mittente = '"+user.getUsername()+"'";
 			rs=query.executeQuery(sql);
 			Segnalazione s;
 
@@ -155,7 +155,7 @@ public int inserisciUtente(Utente user) throws Exception {
 				elenco.add(s);
 			}
 
-			System.out.println("SEGNALAZIONI CARICATE PER L'UTENTE " + user.getNome()+ "  : " + elenco.size());
+			System.out.println("SEGNALAZIONI CARICATE PER L'UTENTE " + user.getUsername()+ "  : " + elenco.size());
 
 			return elenco;
 		}
@@ -200,6 +200,7 @@ public int inserisciUtente(Utente user) throws Exception {
 					}
 					return elenco;
 				}
+				
 
 				public Segnalazione getSegnalazionebyId(String id) throws SQLException {
 					Segnalazione s = new Segnalazione();
@@ -251,6 +252,29 @@ public int inserisciUtente(Utente user) throws Exception {
 		
 						
 					return nrighe;
+				}
+				
+				public ArrayList<Utente> getUtenti() throws SQLException{
+					ArrayList<Utente> elenco = new ArrayList<Utente>();
+					String sql="SELECT * FROM Utente";
+					rs=query.executeQuery(sql);
+					Utente u;
+
+					while(rs.next())
+					{
+						u=new Utente();
+						u.setEmail(rs.getString("email"));
+						u.setUsername(rs.getString("username"));
+						u.setRuolo(rs.getInt("ruolo"));
+						
+						elenco.add(u);
+					}
+
+					System.out.println("UTENTI CARICATI : " + elenco.size());
+					for(int i=0; i<elenco.size();i++){
+						System.out.println(elenco.get(i).getUsername());
+					}
+					return elenco;
 				}
 
 

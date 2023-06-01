@@ -2,28 +2,33 @@ package Model;
 
 public class Utente {
 
-	private String nome;
+	private String username;
 	private String email;
 	private String pw;
 	private int ruolo;
 	
 	
-	public Utente(String nome, String email, String pw, int ruolo) {
+	public Utente(String username, String email, String pw, int ruolo) {
 		super();
-		this.nome = nome;
+		this.username = username;
 		this.email = email;
 		this.pw = pw;
 		this.ruolo = ruolo;
 	}
 
 
-	public String getNome() {
-		return nome;
+	public Utente() {
+		// TODO Auto-generated constructor stub
 	}
 
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public String getUsername() {
+		return username;
+	}
+
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 
@@ -59,7 +64,7 @@ public class Utente {
 
 	@Override
 	public String toString() {
-		return "Utente [nome=" + nome + ", email=" + email + ", pw=" + pw + ", ruolo=" + ruolo + "]";
+		return "Utente [username=" + username + ", email=" + email + ", pw=" + pw + ", ruolo=" + ruolo + "]";
 	}
 	
 	
