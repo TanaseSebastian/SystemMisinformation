@@ -2,11 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@include file="header.jsp"%>
 <html>
-<body style = " 
-/*background-image: url(img/background.jpg)*/;
-background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;">
+<body>
    <!-- FORM  RICERCA MULTIMEDIALE -->
 
 <div class = "searchPage">

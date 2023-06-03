@@ -47,7 +47,8 @@ public class GestoreAutenticazione {
 			db = new DBManager();
 			userFromDB = db.controllaUtenteEsistente(user.getNome(), user.getEmail());
 
-		} catch (Exception e)
+		} 
+		catch (Exception e)
 		{
 
 			System.out.println(e.getMessage());
