@@ -3,18 +3,25 @@ package Model;
 public class Fonte {
 
 	private int id_Fonte;
-	public Fonte() {
-		super();
-	}
 	private String nome;
-	private String url;
+	private String urlRicerca;
+	private String urlFonte;
 	private float indice;
-	public Fonte(int id_Fonte, String nome, String url, float indice) {
+	public Fonte(int id_Fonte, String nome, String urlRicerca, float indice) {
 		super();
 		this.id_Fonte = id_Fonte;
 		this.nome = nome;
-		this.url = url;
+		this.urlRicerca = urlRicerca;
 		this.indice = indice;
+	}
+	//per inserimento
+	public Fonte(String urlFonte) {
+		super();
+		this.urlFonte = urlFonte;
+	}
+	
+	public Fonte() {
+		super();
 	}
 	public int getId_Fonte() {
 		return id_Fonte;
@@ -28,11 +35,11 @@ public class Fonte {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getUrl() {
-		return url;
+	public String getUrlRicerca() {
+		return urlRicerca;
 	}
-	public void setUrl(String url) {
-		this.url = url;
+	public void setUrlRicerca(String urlRicerca) {
+		this.urlRicerca = urlRicerca;
 	}
 	public float getIndice() {
 		return indice;
@@ -40,6 +47,21 @@ public class Fonte {
 	public void setIndice(float indice) {
 		this.indice = indice;
 	}
+	public String getUrlFonte() {
+		return urlFonte;
+	}
+	public void setUrlFonte(String urlFonte) {
+		this.urlFonte = urlFonte;
+	}
+	@Override
+	public String toString() {
+		return "Fonte [id_Fonte=" + id_Fonte + ", nome=" + nome + ", urlRicerca=" + urlRicerca + ", urlFonte="
+				+ urlFonte + ", indice=" + indice + "]";
+	}
+	
+	
+	
+
 	
 	
 }

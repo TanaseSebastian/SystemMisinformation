@@ -19,7 +19,7 @@
 	</div>
 	<div class="form-check form-check-inline">
  	 <input class="form-check-input" type="radio" name="opzioniRicerca" id="inlineRadio2" value="url">
- 	 <label class="form-check-label" for="inlineRadio2">Link File Multimediale</label>
+ 	 <label class="form-check-label" for="inlineRadio2">Link Notizia</label>
 	</div>
 
 
@@ -45,9 +45,9 @@
  		 <hr class="my-4">
  		 <p>Il sistema si occupa di verificare se la fonte è affidabile o meno</p>
   	     <div class="input-group mb-3">
-  			<input type="text" class="form-control" placeholder="Verifica una notizia" aria-label="Verifica una notizia" aria-describedby="button-addon2" name="notizia">
+  			<input type="text" class="form-control" placeholder="Verifica una notizia" aria-label="Verifica una notizia" aria-describedby="button-addon2" name="fonte">
   			<div class="input-group-append">
-   				<input type="submit" class="btn btn-outline-secondary" name="UserAction" value = "Verifica Notizia" id="button-addon2" >
+   				<input type="submit" class="btn btn-outline-secondary" name="UserAction" value = "Verifica Fonte" id="button-addon2" >
   			</div>
 		</div>
 	</div>

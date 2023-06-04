@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import Control.CalcoloAttendibilitàNotizia;
 import Control.GestoreAutenticazione;
+import Control.GestoreFonti;
 import Control.DBManager;
 import Model.Segnalazione;
 import Model.Utente;
@@ -41,12 +42,14 @@ maxFileSize = 1024 * 1024 * 10,      // 10MB
 maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class ViewUtente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private GestoreFonti gesF;
+	private Fonte fonte;
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public ViewUtente() {
 		super();
+		gesF = new GestoreFonti();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -75,6 +78,19 @@ public class ViewUtente extends HttpServlet {
 				
 			}
 			break;
+		case "Verifica Fonte":
+			//recupero la fonte inserita
+			String nomefonte = request.getParameter("fonte");
+			
+
+			//creazione fonte
+			fonte = new Fonte(nomefonte);
+			//inizio elaborazione
+			fonte = gesF.elaboraValutazioneFonte(fonte);
+			//System.out.println(fonte.toString());
+			request.getSession().setAttribute("fonte-valutata", fonte);
+			response.sendRedirect("risultatoValutazioneFonte.jsp");
+			
 
 		}
 
