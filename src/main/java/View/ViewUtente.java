@@ -185,6 +185,11 @@ public class ViewUtente extends HttpServlet {
 			}
 			break;
 			
+			case "Inserisci Utente":
+				System.out.println("sono entrato nel metodo giusto");
+				richiestaInserimentoUtente(request, response);
+				break;
+			
 		      
 		    }
 		}
@@ -193,6 +198,28 @@ public class ViewUtente extends HttpServlet {
 
 	
 
+
+	private void richiestaInserimentoUtente(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String username = request.getParameter("username");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		String ruolo = request.getParameter("ruolo");
+
+		Utente u = new Utente(username, email, password, Integer.parseInt(ruolo));
+		System.out.println("sto inserendo l'utente nel db");
+		DBManager db;
+		try {
+			db = new DBManager();
+			db.inserisciUtente(u);
+			response.sendRedirect("amministrazione.jsp");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			response.sendRedirect("inserisciUtente.jsp");
+		}
+		System.out.println(u.toString());
+		
+	}
 
 	public Utente richiestaLogin(HttpServletRequest request) {
 		Utente user = null;
