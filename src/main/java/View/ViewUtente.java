@@ -44,6 +44,7 @@ public class ViewUtente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private GestoreFonti gesF;
 	private Fonte fonte;
+	private Fonte[] valutazioneFonte;
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -86,9 +87,9 @@ public class ViewUtente extends HttpServlet {
 			//creazione fonte
 			fonte = new Fonte(nomefonte);
 			//inizio elaborazione
-			fonte = gesF.elaboraValutazioneFonte(fonte);
+			valutazioneFonte = gesF.elaboraValutazioneFonte(fonte);
 			//System.out.println(fonte.toString());
-			request.getSession().setAttribute("fonte-valutata", fonte);
+			request.getSession().setAttribute("fonte-valutata", valutazioneFonte);
 			response.sendRedirect("risultatoValutazioneFonte.jsp");
 			
 

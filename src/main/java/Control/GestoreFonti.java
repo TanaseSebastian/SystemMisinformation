@@ -22,7 +22,8 @@ public class GestoreFonti {
 		return url.getHost();
 	}
 	
-	public Fonte elaboraValutazioneFonte(Fonte f) {
+	public Fonte[] elaboraValutazioneFonte(Fonte f) {
+		Fonte[] ritornoValutazione = new Fonte[2];
 		boolean isLink = false;
 		String nomeFonte;
 		Fonte verificata;
@@ -53,7 +54,8 @@ public class GestoreFonti {
 				 */
 				System.out.println("Invalid link");
 				f.setNome("invalid-link");
-				return f;
+				ritornoValutazione[0] = f;
+				return ritornoValutazione;
 				//System.out.println(e.getMessage());
 			}
 		}
@@ -97,7 +99,16 @@ public class GestoreFonti {
 						//se la fonte è stata trovata,termino
 						if(verificata.getIndice() != -1) {
 							System.out.println("trovata");
-							return verificata;
+							//salvo la fonte nel db
+							try {
+								db.inserisciFonte(f);
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							ritornoValutazione[0] = verificata;
+							ritornoValutazione[1] = valutaFonte;
+							return ritornoValutazione;
 						}
 					} 
 					catch (IOException e)
@@ -112,9 +123,11 @@ public class GestoreFonti {
 			
 		}
 		else {
-			return fontedaDB;
+			ritornoValutazione[0] = fontedaDB;
+			ritornoValutazione[1] = new Fonte(0,"DB","",100);
+			return ritornoValutazione;
 		}
-		return f;
+		return ritornoValutazione;
 	}
 	
 }

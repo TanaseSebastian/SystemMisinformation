@@ -112,6 +112,7 @@ public class RicercaMultimediale {
 
 					}
 					news.setDescrizione(descrizione);
+				
 					risultati.add(news);
 					//reinizialliza parametri
 					i = 0;

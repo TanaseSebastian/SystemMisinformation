@@ -3,7 +3,7 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Properties;
+// import java.util.Properties;
 import java.util.Vector;
 
 import Model.Fonte;
@@ -13,7 +13,7 @@ public class DBManager {
 
 	private Connection connessione;
 	private Statement query;
-	private static Properties prop;
+	//private static Properties prop;
 	private String urlDB="";
 	private String userDB;
 	private String pwdDB;
@@ -292,14 +292,32 @@ public int inserisciUtente(Utente user) throws Exception {
 	public ArrayList<Fonte> getFontiPerValutazione() throws SQLException {
 		ArrayList<Fonte> fonti = new ArrayList<>();
 	//	System.out.println("SITI WEB PER VALUTAZIONE TROVATI");
-		String cmd = "SELECT urlBlackList FROM valutazioniFonti";
+		String cmd = "SELECT valutazioniFonti.urlBlackList,fonte.nome FROM"
+				+ " valutazioniFonti join fonte"
+				+ " on valutazioniFonti.fonte = fonte.id_fonte";
 		rs=query.executeQuery(cmd);
 		while(rs.next()) {
 			Fonte f = new Fonte(rs.getString(1));
+			f.setNome(rs.getString(2));
 			fonti.add(f);
 		//	System.out.println(f.toString());
 			}
 		return fonti;		
+	}
+	
+	public void inserisciFonte(Fonte f) throws SQLException
+	{
+		String cmd = "Insert into fonte(nome,url,indice) values (?,?,?)";
+		int nrighe = 0;
+		PreparedStatement ps = connessione.prepareStatement(cmd);
+		ps.setString(1, f.getNome());
+		ps.setString(2, f.getUrlFonte());
+		ps.setInt(3, (int) f.getIndice());
+		nrighe = ps.executeUpdate();	
+		if(nrighe >= 1) 
+			System.out.println("update eseguito correttamente"); 
+		else
+			 System.out.println("update non eseguito");;
 	}
 
 
