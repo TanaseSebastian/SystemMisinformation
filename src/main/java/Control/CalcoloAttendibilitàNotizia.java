@@ -7,32 +7,44 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import Model.Notizia;
+import Model.Fonte;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.util.CoreMap;
 public class CalcoloAttendibilitàNotizia {
+	private DBManager db;
+	
+	
+	public CalcoloAttendibilitàNotizia() {
+		super();
+		this.db = new DBManager();
+	}
 
 	
-public ArrayList<Notizia> calcoloAttendibilitàNotizia(String testo)
+public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo)
 {
 	ArrayList<Notizia> risultati = new ArrayList<>();
 	ArrayList<Notizia> risultatiFiltrati = new ArrayList<>();
+	ArrayList<Fonte> fonti = new ArrayList<>();
+	
 	RicercaMultimediale ric = new RicercaMultimediale();
 	String info = estraiInformazioni(testo);
 	//Recupero informazioni principali e controlli vari
-	
-	
-	//chiamo la classe Ricerca ed eseguo la ricerca su web
-	try {
-		risultati = ric.ricercaNotizia(testo);
-		
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		System.err.println("Error on scraping");
+	fonti = db.getFonti();
+	for(int i = 0; i < fonti.size(); i++) {
+		Fonte fonte = fonti.get(i);
+		try {
+			//effettuo la ricerca
+			risultati.addAll(ric.ricercaNotizia(testo,fonte));
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.err.println("Error on scraping");
+		}		
 	}
-
-	//filtro
+	
+	//filtraggio news
 	if(!risultati.isEmpty()) {
 		for (int i = 0; i < risultati.size(); i++) {
 			Notizia notizia = (Notizia) risultati.get(i);

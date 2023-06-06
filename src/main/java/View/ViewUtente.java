@@ -70,7 +70,7 @@ public class ViewUtente extends HttpServlet {
 				//eseguo ricerca testuale
 				CalcoloAttendibilitàNotizia cff = new CalcoloAttendibilitàNotizia();
 				//faccio la ricerca
-				ArrayList<Notizia> risultati = cff.calcoloAttendibilitàNotizia(notizia);
+				ArrayList<Notizia> risultati = cff.calcoloAttendibilitàNotiziaTestuale(notizia);
 				request.getSession().setAttribute("risultatiNotizia", risultati);
 				//reindirizzo 
 				response.sendRedirect("RisultatiNews.jsp?page=1");				
