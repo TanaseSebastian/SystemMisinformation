@@ -32,24 +32,25 @@ Utente user = (Utente) session.getAttribute("utente");
 	<div class="content" style="padding: 5%;">
 		<div class="block">
 			<form action="ViewUtente" METHOD="POST">
-				<label for="titolo">Username</label> <input class="form-control"
-					name="titolo"></input>
+				<label for="username">Username</label> <input class="form-control"
+					name="username"></input>
 				<div class="form-group">
-					<label for="titolo">email</label> <input class="form-control"
-						name="titolo"></input>
+					<label for="email">email</label> <input type="email" class="form-control"
+						name="email"></input>
+						<label for="password">password</label> <input type="password" class="form-control"
+						name="password"></input>
 					<div class="form-group">
 						<label for="exampleFormControlSelect1">Seleziona Ruolo</label> <select
 							class="form-control" id="exampleFormControlSelect1"
-							name="fonteSegnalata">
+							name="ruolo">
 							<option value="" disabled selected hidden>Seleziona il ruolo</option>
-							<option name="fonteSegnalata" value=0>Utente standard</option>
-							<option name="fonteSegnalata" value=1>Utente moderatore</option>
-							<option name="fonteSegnalata" value=2>Utente
-								amministratore</option>
+							<option name="ruolo" value=0>Utente standard</option>
+							<option name="ruolo" value=1>Utente moderatore</option>
+							<option name="ruolo" value=2>Utente amministratore</option>
 						</select> </select>
 					</div>
 					<input type="submit" class="btn btn-primary" name="UserAction"
-						value="inviaSegnalazione">
+						value="Inserisci Utente">
 			</form>
 		</div>
 	</div>
