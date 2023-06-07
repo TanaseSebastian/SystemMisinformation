@@ -129,5 +129,9 @@ public class GestoreFonti {
 		}
 		return ritornoValutazione;
 	}
+
+public void bloccaFontePerUtente(Fonte f) {
+	db.bloccaFontePerUtente(f);
+}
 	
 }

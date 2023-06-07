@@ -24,7 +24,7 @@ Utente user=(Utente)session.getAttribute("utente");
 	
 	<div class="form-group">
     <label for="mittente">Mittente</label>
-    <input class="form-control" name="mittente" value=<%= user.getNome()%> readonly></input>
+    <input class="form-control" name="mittente" value=<%= user.getUsername()%> readonly></input>
   </div>
   <div class="form-group">
     <label for="exampleFormControlSelect1">Seleziona Fonte</label>

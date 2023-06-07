@@ -7,11 +7,11 @@ public class Notizia {
 	private String descrizione;
 	private String autore;
 	private String data;
-	
+	private int indice;
 	public Notizia() {
 		
 	}
-	public Notizia(String img, String titolo, String descrizione, String autore,String data)
+	public Notizia(String img, String titolo, String descrizione, String autore,String data,int indice)
 	{
 		super();
 		this.img = img;
@@ -19,9 +19,16 @@ public class Notizia {
 		this.descrizione = descrizione;
 		this.autore = autore;
 		this.data = data;
+		this.indice = indice;
 	}
 	
 	
+	public int getIndice() {
+		return indice;
+	}
+	public void setIndice(int indice) {
+		this.indice = indice;
+	}
 	public String getData() {
 		return data;
 	}

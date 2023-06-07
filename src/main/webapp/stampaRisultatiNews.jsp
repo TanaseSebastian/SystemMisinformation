@@ -4,12 +4,15 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="UTF-8"%>
 
+
 <% 
 int pag = 0;
 int pageSize = 5;
 int strIndex;
 int endIndex;
-ArrayList<Notizia> risultati = (ArrayList<Notizia>)session.getAttribute("risultatiNotizia"); %>
+ArrayList<Notizia> risultati = (ArrayList<Notizia>)session.getAttribute("risultatiNotizia"); 
+Notizia cercata = (Notizia) session.getAttribute("notiziaCercata"); 
+%>
 <%if(risultati.isEmpty()) { %>
 
 <div class="alert alert-danger" role="alert">
@@ -24,27 +27,19 @@ else {
 		endIndex = Math.min(strIndex + pageSize, risultati.size());
 		List<Notizia> visualizzaRisultati = risultati.subList(strIndex, endIndex);
 		%>
+		
 		<div class="alert alert-success" role="alert">
   		Risultati trovati: <%=risultati.size()%>
 		</div>
-		<%
-		int offset = 0;
-		for(int i = 0; i < visualizzaRisultati.size(); i++) 
-		{	
-			Notizia news = (Notizia)visualizzaRisultati.get(i); %>
-			<div class="card" >
-			  <div class="card-body">
-			    <h5 class="card-title"><%=news.getTitolo()%></h5>
-			    <p class="card-text"><%=news.getDescrizione()%></p>
-			    <p class="card-text"><small class="text-muted"><%=news.getData()%></small></p>
-			  </div>
-			  <img class="card-img-bottom" src="<%=news.getImg()%>" alt="Img non disponibile" width="500" height="500" >
-			</div>
-			<br>
-			<%}%>
-
-<%} catch(Exception e){} %>
+<div class="container" style="width:100%;text-align: center">
 	<nav aria-label="...">
+<center>	<div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
+  <div class="card-header">Hai cercato:</div>
+  <div class="card-body">
+    <h5 class="card-title"><%=cercata.getTitolo()%></h5>
+   <div class="w3-container w3-blue" id = "indexBar" style="width:<%=cercata.getIndice()%>%"><%=cercata.getIndice()%></div>
+  </div>
+</div></center>
   <ul class="pagination pagination-lg">
 <%
 	int pagineTot = (int) Math.ceil((double)risultati.size() / pageSize);
@@ -54,6 +49,31 @@ else {
 
 		
 	<% } %>
-<% } %>
-  </ul>
+	  </ul>
 </nav>
+</div>		
+		<%
+		int offset = 0;
+		int rows = visualizzaRisultati.size() / 3;
+		int newsDeck = 0;
+		for(int i = 0; i < visualizzaRisultati.size(); i++) 
+		{		
+			Notizia news = (Notizia)visualizzaRisultati.get(i);
+			%>
+
+			<div class="card" style="float:left" >
+			  <div class="card-body">
+			    <h5 class="card-title"><%=news.getTitolo()%></h5>
+			    <!--  <p class="card-text"><%=news.getDescrizione()%></p>-->
+			    <p class="card-text"><small class="text-muted"><%=news.getData()%></small></p>
+			  </div>
+			  <img class="card-img-bottom" src="<%=news.getImg()%>" alt="Img non disponibile" width="500" height="500" >
+			  <a href="#" class="btn btn-primary">Di: <%=news.getAutore()%></a>
+			</div>
+			
+			<%}%>
+		
+<%} catch(Exception e){} %>
+
+<% } %>
+	<script type="text/javascript" src = "js/progressBarColor.js"></script>

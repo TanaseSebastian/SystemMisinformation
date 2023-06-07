@@ -3,7 +3,7 @@
  */
 
  function changeSearch(searchType){
-	 var formNews = document.getElementById("newsSearch");
+	var formNews = document.getElementById("newsSearch");
 	var formSource = document.getElementById("sourceSearch");
 	 switch(searchType){
 		 case"news": 
@@ -17,4 +17,9 @@
 		 	
 		 	
 	 }
+ }
+ 
+ function showLoading(){
+	 var loader = document.getElementById("loader");
+	 loader.style.display = "inline";
  }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import Model.Fonte;
+import Model.FonteDiv;
 import Model.Segnalazione;
 import Model.Utente;
 public class DBManager {
@@ -280,10 +281,10 @@ public int inserisciUtente(Utente user) throws Exception {
 	public Fonte getFonteByName(String nomeFonte) throws SQLException {
 		Fonte fonte = null;
 		//System.out.println("Nome passato nel db" + nomeFonte);
-		String cmd = "SELECT nome,indice FROM Fonte WHERE nome = '" + nomeFonte + "'";
+		String cmd = "SELECT id_fonte,nome,url,indice FROM Fonte WHERE nome = '" + nomeFonte + "'";
 		rs=query.executeQuery(cmd);
 		while(rs.next()) {
-			fonte = new Fonte(0,rs.getString(1),"",rs.getFloat(2));
+			fonte = new Fonte(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getFloat(4));
 			//System.out.println(fonte.toString());
 			}
 		return fonte;
@@ -319,6 +320,42 @@ public int inserisciUtente(Utente user) throws Exception {
 		else
 			 System.out.println("update non eseguito");;
 	}
+
+
+	public ArrayList<FonteDiv> getFontiRicercaTestuale(Utente user) throws SQLException {
+		ArrayList<FonteDiv> elenco = new ArrayList<FonteDiv>();
+		String sql= "SELECT * FROM divFonte where fonte not in ( select fonte from filtroFonti where utente = '" + user.getUsername() +"')";
+		rs=query.executeQuery(sql);
+		FonteDiv f;
+		while(rs.next()) {
+			f = new FonteDiv(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),
+					rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8));
+			elenco.add(f);
+		}
+		return elenco;
+	}
+	public void bloccaFontePerUtente(Fonte f,Utente user) throws SQLException {
+		String sql = "INSERT INTO filtroFonti values (?,?)";
+		PreparedStatement ps = connessione.prepareStatement(sql);
+		ps.setInt(1, f.getId_Fonte());
+		ps.setString(2, user.getUsername());
+		ps.executeUpdate();	
+		
+	}
+	public ArrayList<Fonte> getFontiBloccate(Utente user) throws SQLException {
+		ArrayList<Fonte> elenco = new ArrayList<Fonte>();
+		String sql= " select id_fonte,nome,indice from fonte join filtroFonti\r\n"
+				+ " on fonte.id_fonte = filtroFonti.fonte\r\n"
+				+ " where filtroFonti.utente = '"+user.getUsername()+"';";
+		rs=query.executeQuery(sql);
+		Fonte f;
+		while(rs.next())
+		{
+			f = new Fonte(rs.getInt(1),rs.getString(2)," ",rs.getFloat(3));
+			elenco.add(f);
+		}
+		return elenco;
+	}	
 
 
 

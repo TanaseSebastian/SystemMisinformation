@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import Model.Notizia;
+import Model.Utente;
 import Model.Fonte;
+import Model.FonteDiv;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
@@ -16,27 +18,39 @@ public class CalcoloAttendibilitàNotizia {
 	private DBManager db;
 	
 	
-	public CalcoloAttendibilitàNotizia() {
+	public CalcoloAttendibilitàNotizia() throws Exception {
 		super();
 		this.db = new DBManager();
 	}
 
 	
-public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo)
+public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Utente user) throws Exception
 {
+	//inizializzo array
 	ArrayList<Notizia> risultati = new ArrayList<>();
 	ArrayList<Notizia> risultatiFiltrati = new ArrayList<>();
-	ArrayList<Fonte> fonti = new ArrayList<>();
+	ArrayList<FonteDiv> fonti = new ArrayList<>();
+	//inizializzo notizia
+	Notizia notizia = new Notizia();
+	notizia.setTitolo(testo);
+	notizia.setIndice(50);
 	
 	RicercaMultimediale ric = new RicercaMultimediale();
-	String info = estraiInformazioni(testo);
-	//Recupero informazioni principali e controlli vari
-	fonti = db.getFonti();
+	//estrazione informazioni principali
+	//String info = estraiInformazioni(notizia.getTitolo());
+	
+	//Recupero fonti per ricerca
+	fonti = db.getFontiRicercaTestuale(user);
+	
 	for(int i = 0; i < fonti.size(); i++) {
-		Fonte fonte = fonti.get(i);
+		//recupero fonte per ricerca
+		FonteDiv divfonte = fonti.get(i);
+		String nomefonte = db.getNomeFontebyId(divfonte.getIdFonte());
+		Fonte fonte = db.getFonteByName(nomefonte);
+		
 		try {
-			//effettuo la ricerca
-			risultati.addAll(ric.ricercaNotizia(testo,fonte));
+			//effettuo la ricerca e salvo i risultati
+			risultati.addAll(ric.ricercaNotizia(testo,divfonte,fonte));
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -45,23 +59,49 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo)
 	}
 	
 	//filtraggio news
-	if(!risultati.isEmpty()) {
+	/*if(!risultati.isEmpty())
+	{
 		for (int i = 0; i < risultati.size(); i++) {
-			Notizia notizia = (Notizia) risultati.get(i);
-			boolean corrisponde = filtraNotizia(notizia, info);
+			Notizia notizia2 = (Notizia) risultati.get(i);
+			boolean corrisponde = filtraNotizia(notizia2, info);
 			if(corrisponde == true)
 			{
-				risultatiFiltrati.add(notizia);
+				risultatiFiltrati.add(notizia2);
 			}
 			
 		}
+	}*/
+	//calcoloIndice di attendibilità
+	if(risultati.isEmpty())
+	{
+		notizia.setDescrizione("Non è stato possibile verificare la notizia inserita:\n"
+				+ "La notizia potrebbe essere inventata;\n"
+				+ "Non sono momentaneamente disponibili le fonti per verificare \n"
+				+ "Hai bloccato tutte le fonti per verificare la notizia");
+		notizia.setIndice(50);
 	}
-	return risultatiFiltrati;
+	else if(!risultati.isEmpty())
+	{
+		int decremento = 5;
+		for (int i = 0; i < risultati.size(); i++)
+		{
+			int indice = notizia.getIndice();
+			notizia.setIndice(indice - decremento);
+		}
+		if(notizia.getIndice() < 0)
+		{
+			notizia.setIndice(0);
+		}
+	}
+	risultati.add(0, notizia);
+	return risultati;
 }
 
 public String estraiInformazioni(String notizia) {
     // Notizia da verificare
     //String notizia = "Silvio Berlusconi è morto nel 1950 a Milano.";
+
+	
     String informazioni = "";
     // Creazione del pipeline di Stanford CoreNLP
     Properties props = new Properties();
@@ -82,6 +122,7 @@ public String estraiInformazioni(String notizia) {
         for (CoreMap token : sentence.get(CoreAnnotations.TokensAnnotation.class)) {
             String word = token.get(CoreAnnotations.TextAnnotation.class);
             String nerTag = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
+            
            
             if (!nerTag.equals("O")) {
                 System.out.println(word + " [" + nerTag + "]");
@@ -91,16 +132,6 @@ public String estraiInformazioni(String notizia) {
         }
     }
     
-   /* System.out.println("Predicati verbali:");
-    for (CoreMap sentence : sentences) {
-        for (CoreMap token : sentence.get(CoreAnnotations.TokensAnnotation.class)) {
-            String word = token.get(CoreAnnotations.TextAnnotation.class);
-            String posTag = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
-            if (posTag.startsWith("VB")) {
-                System.out.println(word);
-            }
-        }
-    }*/
     return informazioni;
 }
 
@@ -130,4 +161,9 @@ public boolean filtraNotizia(Notizia n,String info) {
 	}
 	return  hasValidInfo;
 }
+
+/*public Notizia algCalcoloIndice(Notizia n, ArrayList<Notizia> risultati)
+{
+	
+}*/
 }

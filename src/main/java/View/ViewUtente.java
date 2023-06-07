@@ -63,14 +63,38 @@ public class ViewUtente extends HttpServlet {
 		String userAction = request.getParameter("UserAction");
 		switch(userAction) {
 		case "Verifica Notizia":
+			
 			//recupero la notizia e la tipologia
 			String tipoRicerca = request.getParameter("opzioniRicerca");
 			String notizia = request.getParameter("notizia");
 			if(tipoRicerca.equals("testuale")) {
 				//eseguo ricerca testuale
-				CalcoloAttendibilitàNotizia cff = new CalcoloAttendibilitàNotizia();
+				CalcoloAttendibilitàNotizia cff = null;
+				try {
+					cff = new CalcoloAttendibilitàNotizia();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				//faccio la ricerca
-				ArrayList<Notizia> risultati = cff.calcoloAttendibilitàNotiziaTestuale(notizia);
+				ArrayList<Notizia> risultati = new ArrayList<>();
+				try {
+					Utente user;
+					user= (Utente) request.getSession().getAttribute("utente");
+					if(user == null) {
+						user = new Utente();
+						user.setUsername("guest");
+					}
+					/*else {
+						user = (Utente) request.getAttribute("utente");
+					}*/
+					risultati = cff.calcoloAttendibilitàNotiziaTestuale(notizia,user);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Notizia cercata = risultati.remove(0);
+				request.getSession().setAttribute("notiziaCercata", cercata);
 				request.getSession().setAttribute("risultatiNotizia", risultati);
 				//reindirizzo 
 				response.sendRedirect("RisultatiNews.jsp?page=1");				
@@ -189,7 +213,27 @@ public class ViewUtente extends HttpServlet {
 				System.out.println("sono entrato nel metodo giusto");
 				richiestaInserimentoUtente(request, response);
 				break;
+				
+			case "Blocca Fonte":
+				int idFonte = Integer.parseInt(request.getParameter("idFonteDaBloccare"));
+				Utente user2 = (Utente)request.getSession().getAttribute("utente");
+						
+			DBManager db;
+			try {
+				db = new DBManager();
+				String nome = db.getNomeFontebyId(idFonte);
+				Fonte f = db.getFonteByName(nome);
 			
+				db.bloccaFontePerUtente(f, user2);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			response.sendRedirect("gestioneFontiUtente.jsp");
+			break;
+			
+				
+				
 		      
 		    }
 		}
