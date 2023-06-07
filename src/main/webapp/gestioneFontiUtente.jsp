@@ -65,8 +65,9 @@ Fonte f;
 							 f=(Fonte)fontiBloccate.get(i);
 						 %>
 							<tr>
-								<td><%=f.getNome() %> </td>
-								<td><%=f.getIndice() %> </td>
+								<td><h3><%=f.getNome() %></h3> </td>
+								<td><h3><%=f.getIndice() %></h3> </td>
+								<td><a href="ViewUtente?UserAction=sbloccaFonte&id=<%=f.getId_Fonte()%>" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Sblocca</a> </td>
 							</tr>
 							<%
 						    }

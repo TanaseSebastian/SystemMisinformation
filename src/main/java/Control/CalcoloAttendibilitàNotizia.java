@@ -1,11 +1,16 @@
 package Control;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import Model.Notizia;
 import Model.Utente;
 import Model.Fonte;
@@ -32,10 +37,57 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 	ArrayList<FonteDiv> fonti = new ArrayList<>();
 	//inizializzo notizia
 	Notizia notizia = new Notizia();
-	notizia.setTitolo(testo);
+	Fonte autoreNotizia = null;
+	Fonte[] risElaborazioneAutore;
 	notizia.setIndice(50);
 	
+	String fonte = "no-link";
+	//verifico che la notiza sia un link, recupero la fonte
+	try {
+		fonte = GestoreFonti.getHostByUrl(testo);
+		//testo = temp;
+		
+	} 
+	catch (MalformedURLException e)
+	{
+		System.out.println("Not a link");
+		fonte = "no-link";
+		
+	}
+	//se il link è valido
+	if(!fonte.equals("no-link"))
+	{
+		//recupero il titolo della notizai
+        try {
+            // Scarica il documento HTML dal URL
+            Document document = Jsoup.connect(testo).get();
+
+            // Estrae il titolo della pagina
+            testo = document.title();
+
+            // Stampa il titolo
+            System.out.println("Titolo della pagina: " + testo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        autoreNotizia = new Fonte(fonte);
+        //cerco la valutazione della fonte
+        GestoreFonti gesF = new GestoreFonti();
+        risElaborazioneAutore = gesF.elaboraValutazioneFonte(autoreNotizia);
+        //stampo
+        if(risElaborazioneAutore != null)
+        {
+        	System.out.println(risElaborazioneAutore[0].toString());
+        	System.out.println(risElaborazioneAutore[1].toString());
+        	notizia.setIndice((int) (risElaborazioneAutore[0].getIndice()));
+        	notizia.setDescrizione("La notizia proviene dalla black list di uno dei nostri siti esterni "
+        				+ "Nonostante l'indice di attendibilità possa risultare alto, attenzione! \n");
+        }
+	}
+	
+	notizia.setTitolo(testo);
 	RicercaMultimediale ric = new RicercaMultimediale();
+	
 	//estrazione informazioni principali
 	//String info = estraiInformazioni(notizia.getTitolo());
 	
@@ -46,11 +98,11 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 		//recupero fonte per ricerca
 		FonteDiv divfonte = fonti.get(i);
 		String nomefonte = db.getNomeFontebyId(divfonte.getIdFonte());
-		Fonte fonte = db.getFonteByName(nomefonte);
+		Fonte fonteRicerca = db.getFonteByName(nomefonte);
 		
 		try {
 			//effettuo la ricerca e salvo i risultati
-			risultati.addAll(ric.ricercaNotizia(testo,divfonte,fonte));
+			risultati.addAll(ric.ricercaNotizia(testo,divfonte,fonteRicerca));
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -161,6 +213,7 @@ public boolean filtraNotizia(Notizia n,String info) {
 	}
 	return  hasValidInfo;
 }
+
 
 /*public Notizia algCalcoloIndice(Notizia n, ArrayList<Notizia> risultati)
 {

@@ -355,6 +355,13 @@ public int inserisciUtente(Utente user) throws Exception {
 			elenco.add(f);
 		}
 		return elenco;
+	}
+
+	public void sbloccaFontePerUtente(Fonte f, Utente user) throws SQLException {
+		String sql = "DELETE FROM filtroFonti where fonte = '" + f.getId_Fonte() +"' and utente = '"+user.getUsername() + "'";
+		PreparedStatement ps = connessione.prepareStatement(sql);
+		ps.executeUpdate();
+		
 	}	
 
 

@@ -45,7 +45,7 @@ public class GestoreAutenticazione {
 		//Cerco un utente che abbia lo stesso username
 		try {
 			db = new DBManager();
-			userFromDB = db.controllaUtenteEsistente(user.getNome(), user.getEmail());
+			userFromDB = db.controllaUtenteEsistente(user.getUsername(), user.getEmail());
 
 		} 
 		catch (Exception e)
@@ -56,7 +56,7 @@ public class GestoreAutenticazione {
 		//se l'ha trovato
 		if(userFromDB != null) {
 			// se username o email uguali, non inserisce
-			if(userFromDB.getNome() == user.getNome() || userFromDB.getEmail() == user.getEmail() )
+			if(userFromDB.getUsername() == user.getUsername() || userFromDB.getEmail() == user.getEmail() )
 			{
 				return 0;
 			}

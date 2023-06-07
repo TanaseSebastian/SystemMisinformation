@@ -17,7 +17,7 @@ public class GestoreFonti {
 		
 	}
 
-	public String getHostByUrl(String fonte) throws MalformedURLException {
+	public static String getHostByUrl(String fonte) throws MalformedURLException {
 		URL url = new URL(fonte);
 		return url.getHost();
 	}
@@ -130,8 +130,6 @@ public class GestoreFonti {
 		return ritornoValutazione;
 	}
 
-public void bloccaFontePerUtente(Fonte f) {
-	db.bloccaFontePerUtente(f);
-}
+
 	
 }

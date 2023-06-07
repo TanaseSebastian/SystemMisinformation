@@ -115,7 +115,27 @@ public class ViewUtente extends HttpServlet {
 			//System.out.println(fonte.toString());
 			request.getSession().setAttribute("fonte-valutata", valutazioneFonte);
 			response.sendRedirect("risultatoValutazioneFonte.jsp");
+			break;
 			
+			
+		case "sbloccaFonte":
+			System.out.println("Sono nello sblocca fonte");
+			int id = Integer.parseInt(request.getParameter("id"));
+			Utente user3 = (Utente)request.getSession().getAttribute("utente");
+					
+			DBManager db2;
+			try {
+				db2 = new DBManager();
+				String nome = db2.getNomeFontebyId(id);
+				Fonte f = db2.getFonteByName(nome);
+		
+				db2.sbloccaFontePerUtente(f, user3);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+			response.sendRedirect("gestioneFontiUtente.jsp");
+			break;
 
 		}
 
@@ -232,7 +252,8 @@ public class ViewUtente extends HttpServlet {
 			response.sendRedirect("gestioneFontiUtente.jsp");
 			break;
 			
-				
+
+							
 				
 		      
 		    }

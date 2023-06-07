@@ -13,6 +13,14 @@ int endIndex;
 ArrayList<Notizia> risultati = (ArrayList<Notizia>)session.getAttribute("risultatiNotizia"); 
 Notizia cercata = (Notizia) session.getAttribute("notiziaCercata"); 
 %>
+<center>	<div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
+  <div class="card-header">Hai cercato:</div>
+  <div class="card-body">
+    <h5 class="card-title"><%=cercata.getTitolo()%></h5>
+   <div class="w3-container w3-blue" id = "indexBar" style="width:<%=cercata.getIndice()%>%"><%=cercata.getIndice()%></div>
+  </div>
+</div></center>
+	<%=cercata.getDescrizione()%>
 <%if(risultati.isEmpty()) { %>
 
 <div class="alert alert-danger" role="alert">
@@ -31,15 +39,10 @@ else {
 		<div class="alert alert-success" role="alert">
   		Risultati trovati: <%=risultati.size()%>
 		</div>
+	
 <div class="container" style="width:100%;text-align: center">
 	<nav aria-label="...">
-<center>	<div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
-  <div class="card-header">Hai cercato:</div>
-  <div class="card-body">
-    <h5 class="card-title"><%=cercata.getTitolo()%></h5>
-   <div class="w3-container w3-blue" id = "indexBar" style="width:<%=cercata.getIndice()%>%"><%=cercata.getIndice()%></div>
-  </div>
-</div></center>
+
   <ul class="pagination pagination-lg">
 <%
 	int pagineTot = (int) Math.ceil((double)risultati.size() / pageSize);
