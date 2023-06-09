@@ -17,6 +17,7 @@ public class GestoreSegnalazioni {
 	public Segnalazione retrieveSegnalazionebyId(String id) throws Exception {
 		DBManager db = new DBManager();
 		Segnalazione s = db.getSegnalazionebyId(id);
+		
 		return s;
 	}
 	

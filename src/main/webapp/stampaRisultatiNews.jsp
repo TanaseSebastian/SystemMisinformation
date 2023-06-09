@@ -12,11 +12,17 @@ int strIndex;
 int endIndex;
 ArrayList<Notizia> risultati = (ArrayList<Notizia>)session.getAttribute("risultatiNotizia"); 
 Notizia cercata = (Notizia) session.getAttribute("notiziaCercata"); 
+String tipologia = request.getParameter("tiporisultato");
 %>
 <center>	<div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
   <div class="card-header">Hai cercato:</div>
   <div class="card-body">
+  <%if(tipologia.equals("img")){ %>
+  	<img alt="" src="<%=cercata.getImg()%>" width="300" height="300">
+  <%}
+    else {%>
     <h5 class="card-title"><%=cercata.getTitolo()%></h5>
+    <%} %>
    <div class="w3-container w3-blue" id = "indexBar" style="width:<%=cercata.getIndice()%>%"><%=cercata.getIndice()%></div>
   </div>
 </div></center>
@@ -48,7 +54,7 @@ else {
 	int pagineTot = (int) Math.ceil((double)risultati.size() / pageSize);
 	for (int i = 1; i <= pagineTot; i++) 
 		{ %>
-    <li class="page-item"><a class="page-link" href="RisultatiNews.jsp?page=<%= i %>"><%= i %></a></li>
+    <li class="page-item"><a class="page-link" href="RisultatiNews.jsp?page=<%= i %>&tiporisultato=txt"><%= i %></a></li>
 
 		
 	<% } %>

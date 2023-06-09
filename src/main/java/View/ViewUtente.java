@@ -68,7 +68,7 @@ public class ViewUtente extends HttpServlet {
 			String tipoRicerca = request.getParameter("opzioniRicerca");
 			String notizia = request.getParameter("notizia");
 			if(tipoRicerca.equals("testuale")) {
-				//eseguo ricerca testuale
+				//Creo oggetto per calcolare indice
 				CalcoloAttendibilitàNotizia cff = null;
 				try {
 					cff = new CalcoloAttendibilitàNotizia();
@@ -76,8 +76,9 @@ public class ViewUtente extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//faccio la ricerca
+				
 				ArrayList<Notizia> risultati = new ArrayList<>();
+				//controllo se l'utente è loggato ( per filtro )
 				try {
 					Utente user;
 					user= (Utente) request.getSession().getAttribute("utente");
@@ -88,19 +89,41 @@ public class ViewUtente extends HttpServlet {
 					/*else {
 						user = (Utente) request.getAttribute("utente");
 					}*/
+					//calcolo indice attendibilità
 					risultati = cff.calcoloAttendibilitàNotiziaTestuale(notizia,user);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Notizia cercata = risultati.remove(0);
+				Notizia cercata = new Notizia(notizia, notizia, userAction, tipoRicerca, notizia, 0);
+				if(!risultati.isEmpty()) {
+					 cercata = risultati.remove(0);
+				}
+				//metto in seessione la notizia
 				request.getSession().setAttribute("notiziaCercata", cercata);
 				request.getSession().setAttribute("risultatiNotizia", risultati);
 				//reindirizzo 
-				response.sendRedirect("RisultatiNews.jsp?page=1");				
+				response.sendRedirect("RisultatiNews.jsp?page=1&tiporisultato=txt");				
 			}
-			else if (tipoRicerca.equals("url")) {
-				
+			else if (tipoRicerca.equals("multimedia")) {
+				ArrayList<Notizia> risultati = new ArrayList<>();
+				CalcoloAttendibilitàNotizia cff = null;
+				try {
+					cff = new CalcoloAttendibilitàNotizia();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				risultati = cff.calcoloAttendibilitàNotiziaMultimediale(notizia);
+				//metto in seessione la notizia
+				Notizia cercata = new Notizia(notizia, notizia, userAction, tipoRicerca, notizia, 0);
+				if(!risultati.isEmpty()) {
+					 cercata = risultati.remove(0);
+				}
+				request.getSession().setAttribute("notiziaCercata", cercata);
+				request.getSession().setAttribute("risultatiNotizia", risultati);
+				//reindirizzo 
+				response.sendRedirect("RisultatiNews.jsp?page=1&tiporisultato=img");
 			}
 			break;
 		case "Verifica Fonte":

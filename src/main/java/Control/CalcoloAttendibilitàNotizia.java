@@ -1,8 +1,15 @@
 package Control;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -11,14 +18,27 @@ import java.util.StringTokenizer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import Model.Notizia;
 import Model.Utente;
 import Model.Fonte;
 import Model.FonteDiv;
-import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-import edu.stanford.nlp.util.CoreMap;
+
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.DataOutputStream;
+import java.io.BufferedInputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 public class CalcoloAttendibilitàNotizia {
 	private DBManager db;
 	
@@ -89,7 +109,7 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 	RicercaMultimediale ric = new RicercaMultimediale();
 	
 	//estrazione informazioni principali
-	//String info = estraiInformazioni(notizia.getTitolo());
+	 ArrayList<String> info = estraiInformazioni(notizia.getTitolo());
 	
 	//Recupero fonti per ricerca
 	fonti = db.getFontiRicercaTestuale(user);
@@ -111,7 +131,7 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 	}
 	
 	//filtraggio news
-	/*if(!risultati.isEmpty())
+	if(!risultati.isEmpty())
 	{
 		for (int i = 0; i < risultati.size(); i++) {
 			Notizia notizia2 = (Notizia) risultati.get(i);
@@ -122,7 +142,7 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 			}
 			
 		}
-	}*/
+	}
 	//calcoloIndice di attendibilità
 	if(risultati.isEmpty())
 	{
@@ -132,10 +152,10 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 				+ "Hai bloccato tutte le fonti per verificare la notizia");
 		notizia.setIndice(50);
 	}
-	else if(!risultati.isEmpty())
+	else if(!risultatiFiltrati.isEmpty())
 	{
 		int decremento = 5;
-		for (int i = 0; i < risultati.size(); i++)
+		for (int i = 0; i < risultatiFiltrati.size(); i++)
 		{
 			int indice = notizia.getIndice();
 			notizia.setIndice(indice - decremento);
@@ -145,17 +165,59 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 			notizia.setIndice(0);
 		}
 	}
-	risultati.add(0, notizia);
-	return risultati;
+	risultatiFiltrati.add(0, notizia);
+	return risultatiFiltrati;
 }
+public ArrayList<Notizia> calcoloAttendibilitàNotiziaMultimediale(String link) throws IOException
+{
+	ArrayList<Notizia> risultati = new ArrayList<>();
+	//inizializzazione notizia
+	Notizia n = new Notizia();
+	n.setImg(link);
+	n.setTitolo(link);
+	int indice = 0;
+	  String credentialsToEncode = "acc_26e4afc7aab2c9b" + ":" + "428c2c61c4aae66f0fc82d46ab0377ee";
+	  String basicAuth = Base64.getEncoder().encodeToString(credentialsToEncode.getBytes(StandardCharsets.UTF_8));
 
-public String estraiInformazioni(String notizia) {
-    // Notizia da verificare
+	  String endpoint_url = "https://api.imagga.com/v2/tags";
+	  String image_url = n.getImg();
+
+	  String url = endpoint_url + "?image_url=" + image_url;
+	  URL urlObject = new URL(url);
+	  HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
+
+	  connection.setRequestProperty("Authorization", "Basic " + basicAuth);
+
+	  int responseCode = connection.getResponseCode();
+
+	  System.out.println("\nSending 'GET' request to URL : " + url);
+	  System.out.println("Response Code : " + responseCode);
+
+	  BufferedReader connectionInput = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+	  String jsonResponse = connectionInput.readLine();
+
+	  connectionInput.close();
+	  //dato il file json come rispsota,leggo l'indice
+	  indice = estrattoreIndice(jsonResponse);
+	 // System.out.println(jsonResponse);
+	  n.setIndice(indice);
+	  
+	  //Faccio visualizzare la fonte da qui proviene la verifica
+	  Notizia valutatore = new Notizia("https://imagga.com/static/images/logo_white.svg", "imagga", " ","IMAGGA", " ", 100);
+	  
+	  risultati.add(n);
+	  risultati.add(valutatore);
+	  
+	  return risultati;
+
+	}
+public ArrayList<String> estraiInformazioni(String notizia) {
+    
     //String notizia = "Silvio Berlusconi è morto nel 1950 a Milano.";
 
 	
-    String informazioni = "";
-    // Creazione del pipeline di Stanford CoreNLP
+  /*  // Creazione del pipeline di Stanford CoreNLP
     Properties props = new Properties();
     props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
     StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
@@ -182,15 +244,18 @@ public String estraiInformazioni(String notizia) {
             }
 
         }
+    }*/
+	ArrayList<String> informazioni =  new ArrayList<>();
+    StringTokenizer st = new StringTokenizer(notizia," ");
+    while(st.hasMoreElements()) {
+    	informazioni.add(st.nextToken());
     }
-    
     return informazioni;
 }
 
-public boolean filtraNotizia(Notizia n,String info) {
-	boolean hasValidInfo = false;
+public boolean filtraNotizia(Notizia n,ArrayList<String> info) {
 	//suddivido le info ottenute in token
-	StringTokenizer stInfo = new StringTokenizer(info," ");
+	/*StringTokenizer stInfo = new StringTokenizer(info," ");
 	
 	//per ogni info, verifico che sia presente nel titolo della news almeno una di  esse
 	while(stInfo.hasMoreElements() && hasValidInfo == false) {
@@ -210,11 +275,57 @@ public boolean filtraNotizia(Notizia n,String info) {
 				break;
 			}
 		}
+	}*/
+	//inizializzazione parametri
+	boolean hasValidInfo = false;
+	int parolePresenti = 0;
+	ArrayList<String> notiziaEstratta = estraiInformazioni(n.getTitolo());
+	//per ogni parola di un titolo della notizia, controllo che almeno ce ne siano un tot ripsetto a quella cercata
+	for(int i = 0; i < notiziaEstratta.size(); i++)
+	{
+		for(int j = 0; j < info.size(); j++) {
+			String daNotiziaTrovata = notiziaEstratta.get(i);
+			String daNotiziaCercata = info.get(j);
+			if(daNotiziaTrovata.equalsIgnoreCase(daNotiziaCercata))
+				parolePresenti++;
+		}
 	}
+	if(parolePresenti >= 2)
+		hasValidInfo = true;
+	
 	return  hasValidInfo;
 }
 
+public int estrattoreIndice(String jsonFile) {
+	int indice = 0;
+	ObjectMapper objectMapper = new ObjectMapper();
+	try {
+      // Parsing del JSON
+      JsonNode jsonNode = objectMapper.readTree(jsonFile);
 
+      // Ottenere l'array "tags"
+      JsonNode tagsNode = jsonNode.path("result").path("tags");
+
+      if (tagsNode.isArray()) {
+          // Iterare attraverso i valori dell'array "tags"
+          for (JsonNode tagNode : tagsNode) {
+              // Ottenere il valore "confidence"
+              double confidence = tagNode.path("confidence").asDouble();
+              System.out.println("Indice: " + confidence);
+              indice = (int) confidence;
+              break;
+          }
+      }
+      
+  }
+	catch (IOException e)
+	{
+      e.printStackTrace();
+  
+	}
+	return indice;
+	
+}
 /*public Notizia algCalcoloIndice(Notizia n, ArrayList<Notizia> risultati)
 {
 	
