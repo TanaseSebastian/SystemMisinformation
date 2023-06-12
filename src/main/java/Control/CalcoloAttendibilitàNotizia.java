@@ -74,7 +74,7 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 		fonte = "no-link";
 		
 	}
-	//se il link è valido
+	//se il link non è valido
 	if(!fonte.equals("no-link"))
 	{
 		//recupero il titolo della notizai

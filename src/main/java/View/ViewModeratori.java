@@ -22,14 +22,14 @@ import Model.Notizia;
 /**
  * Servlet implementation class GestoreUtente
  */
-@WebServlet("/viewSegnalazioni")
-public class ViewSegnalazione extends HttpServlet {
+@WebServlet("/viewmoderatori")
+public class ViewModeratori extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ViewSegnalazione() {
+	public ViewModeratori() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

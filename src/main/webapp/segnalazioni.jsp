@@ -98,7 +98,7 @@ if(righe==null){
 							<td><%=s.getMittente()%></td>
 							<td><%=s.getIdFonteSegnalata()%></td>
 							<% if(s.getStato()==0){ %>
-							<td><a href="viewSegnalazioni?cmd=valida&id=<%=s.getIdSegnalazione()%>"><i class="fa fa-info-circle" aria-hidden="true"></i>valida questa segnalazione</a></td>	
+							<td><a href="viewmoderatori?cmd=valida&id=<%=s.getIdSegnalazione()%>"><i class="fa fa-info-circle" aria-hidden="true"></i>valida questa segnalazione</a></td>	
 							<%}else if(s.getStato()==1){%>	
 							<td>segnalazione validata</td>	
 							<%}else if(s.getStato()==2){%>

@@ -21,7 +21,7 @@ Segnalazione segnalazione=(Segnalazione)session.getAttribute("segnalazione");
 	
 	<div class="content" style="padding:5%;">
 	<div class="block">
-	<form action= "viewSegnalazioni" METHOD = "POST" onSubmit="if(!confirm('Sei sicuro di voler confermare questa operazione?')){return false;}">
+	<form action= "viewmoderatori" METHOD = "POST" onSubmit="if(!confirm('Sei sicuro di voler confermare questa operazione?')){return false;}">
 	<input class="form-control" name="id" value=<%= segnalazione.getIdSegnalazione()%> hidden readonly></input>
 	<div class="form-group">
     <label for="mittente">Mittente</label>
