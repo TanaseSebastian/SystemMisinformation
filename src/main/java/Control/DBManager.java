@@ -362,7 +362,25 @@ public int inserisciUtente(Utente user) throws Exception {
 		PreparedStatement ps = connessione.prepareStatement(sql);
 		ps.executeUpdate();
 		
-	}	
+	}
+
+	public int diminuisciIndiceFonte(String nomeFonte) throws SQLException {
+		// TODO Auto-generated method stub
+		int nrighe=0;	
+		String sqlcommand1 = "UPDATE fonte set indice = indice - 1 where nome = ?;";
+		PreparedStatement ps = connessione.prepareStatement(sqlcommand1);
+		ps.setString(1, nomeFonte);
+		System.out.println("query che sto eseguendo : "+ps);
+		nrighe = ps.executeUpdate();
+		
+		if(nrighe >= 1) 
+			System.out.println("update eseguito correttamente"); 
+		else
+			 System.out.println("update non eseguito");;
+
+			
+		return nrighe;
+	}
 
 
 

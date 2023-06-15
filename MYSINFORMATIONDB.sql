@@ -1,6 +1,6 @@
-create database MYSINFORMATION_DB;
+--  create database MYSINFORMATION_DB;
 use MYSINFORMATION_DB;
--- drop database MYSINFORMATION_DB
+-- drop database MYSINFORMATION_DB;
 create table utente (
 username varchar(50) primary key,
 email varchar(50),
@@ -11,7 +11,7 @@ create table fonte (
 id_fonte int auto_increment primary key,
 nome varchar(50),
 url varchar(100),
-indice float
+indice int default 100
 );
 
 create table segnalazione (
@@ -25,6 +25,7 @@ foreign key (mittente) REFERENCES utente(username),
 foreign key (fonte_segnalata) references fonte(id_fonte)
 );
 
+
 create table filtroFonti (
 fonte int,
 utente varchar(50),
@@ -34,17 +35,33 @@ foreign key (fonte) references fonte(id_fonte)
 
 create table whiteList(
 fonte int,
-foreign key (fonte ) references fonte(fonte)
+foreign key (fonte ) references fonte(id_fonte)
 );
 
 create table blackList(
 fonte int,
-foreign key (fonte ) references fonte(fonte)
+foreign key (fonte) references fonte(id_fonte)
 );
 
 
+insert into utente values ("Seb","p@p","java",2);
 insert into utente values ("Fabian","p@p","java",1);
 insert into utente values ("utente","p@p2","java",0);
+insert into utente values ("Sebastian","p@p2","java",0);
+
+insert into fonte(nome,url) values("larepubblica","ww");
+insert into fonte(nome,url) values("bufale","bufale.net");
+
+-- UPDATE fonte set indice = indice + 1 where nome = "La Repubblica";
+
+
+
+select *  from fonte;
+drop table fonte;
+select * from utente;
+select * from segnalazione;
+
+
 
 insert into fonte(nome,url) values("Corriere della Sera","www.corriere.it");
 insert into fonte(nome,url) values("La Repubblica","www.repubblica.it");
@@ -146,9 +163,3 @@ insert into fonte(nome,url) values("Il Gazzettino di Palermo","www.ilgazzettinop
 insert into fonte(nome,url) values("Il Gazzettino di Messina","www.ilgazzettinomessina.it");
 insert into fonte(nome,url) values("Il Gazzettino di Cagliari","www.ilgazzettinocagliari.it");
 insert into fonte(nome,url) values("Il Gazzettino di Sassari","www.ilgazzettinocagliari.it");
-
-
-
-
-
-select * from utente;
