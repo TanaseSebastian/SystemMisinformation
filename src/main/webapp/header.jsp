@@ -12,25 +12,27 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <meta charset="ISO-8859-1">
 <title>Index Page</title>
+
 </head>
 <body>
 
 
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #ffffff00">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #ffffff00;">
       <a class="navbar-brand" href="#">
     <img src="img/icon.png" width="50" height="50" class="d-inline-block align-top" alt="">
   </a>
-        <a class="navbar-brand" href="#">MYSINFORMATION</a>
+        <a class="navbar-brand" style="color: white" href="#">MYSINFORMATION</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
+          
             <li class="nav-item active">
-              <a class="nav-link" href="index.jsp">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="index.jsp" style="color: white">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Notizie</a>
+              <a class="nav-link"  href="index.jsp" style="color: white">Notizie</a>
             </li>
             
             <%
@@ -43,7 +45,7 @@
 		if(logged == false){
 		%>
 				<li class="nav-item">
-              <a class="nav-link" href="login.jsp">Accedi</a>
+              <a class="nav-link" href="login.jsp" style="color: white">Accedi</a>
 		<%} 
 		else{
 		%>
@@ -52,21 +54,21 @@
 				//System.out.println("ruolo dell'utente "+session.getAttribute("ruolo"));
 				if(session.getAttribute("ruolo").equals(0)){
 				%>
-              <a class="nav-link" href="segnalazioniUtente.jsp">Segnalazioni</a>
+              <a class="nav-link" style="color: white" href="segnalazioniUtente.jsp">Segnalazioni</a>
               <%}else if(session.getAttribute("ruolo").equals(1)) {%>
-              <a class="nav-link" href="segnalazioni.jsp">Segnalazioni</a>
+              <a class="nav-link" style="color: white" href="segnalazioni.jsp">Segnalazioni</a>
               <%}else if(session.getAttribute("ruolo").equals(2)) {%>
-              <a class="nav-link" href="amministrazione.jsp">Amministrazione</a>
+              <a class="nav-link" style="color: white" href="amministrazione.jsp">Amministrazione</a>
               <%} %>
             </li>
 			<li class="nav-item">
-			<a class="nav-link" href="#">Account di <%= session.getAttribute("username") %></a>
+			<a class="nav-link" style="color: white" href="#">Account di <%= session.getAttribute("username") %></a>
 			</li>
 			<li>
-			<a class="nav-link" href="logout">Logout</a>
+			<a class="nav-link" style="color: white" href="logout">Logout</a>
 			</li>
 			<li>
-			<a class="nav-link" href="gestioneFontiUtente.jsp">Filtro Ricerca</a>
+			<a class="nav-link" style="color: white" href="gestioneFontiUtente.jsp">Filtro Ricerca</a>
 			</li>
 		<%
 		}%>

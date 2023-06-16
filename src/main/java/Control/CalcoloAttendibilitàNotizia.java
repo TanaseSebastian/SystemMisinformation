@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
@@ -17,9 +19,14 @@ import java.util.StringTokenizer;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import Model.Notizia;
 import Model.Utente;
@@ -55,127 +62,110 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 	ArrayList<Notizia> risultati = new ArrayList<>();
 	ArrayList<Notizia> risultatiFiltrati = new ArrayList<>();
 	ArrayList<FonteDiv> fonti = new ArrayList<>();
-	//inizializzo notizia
+	ArrayList<String> info = new ArrayList<>();
+	Notizia web = new Notizia();
+	 
+	//inizializzazione iniziale
 	Notizia notizia = new Notizia();
-	Fonte autoreNotizia = null;
-	Fonte[] risElaborazioneAutore;
 	notizia.setIndice(50);
-	
-	String fonte = "no-link";
-	//verifico che la notiza sia un link, recupero la fonte
-	try {
-		fonte = GestoreFonti.getHostByUrl(testo);
-		//testo = temp;
-		
-	} 
-	catch (MalformedURLException e)
-	{
-		System.out.println("Not a link");
-		fonte = "no-link";
-		
-	}
-	//se il link è valido, recupero la fonte e la notizia
-	if(!fonte.equals("no-link"))
-	{
-		//recupero il titolo della notizai
-        try {
-            // Scarica il documento HTML dal URL
-            Document document = Jsoup.connect(testo).get();
-
-            // Estrae il titolo della pagina
-            testo = document.title();
-
-            // Stampa il titolo
-            System.out.println("Titolo della pagina: " + testo);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        autoreNotizia = new Fonte(fonte);
-        //cerco la valutazione della fonte
-        GestoreFonti gesF = new GestoreFonti();
-        risElaborazioneAutore = gesF.elaboraValutazioneFonte(autoreNotizia);
-        //stampo
-        if(risElaborazioneAutore != null)
-        {
-        	System.out.println(risElaborazioneAutore[0].toString());
-        	System.out.println(risElaborazioneAutore[1].toString());
-        	notizia.setIndice((int) (risElaborazioneAutore[0].getIndice()));
-        	notizia.setDescrizione("La notizia proviene dalla black list di uno dei nostri siti esterni "
-        				+ "Nonostante l'indice di attendibilità possa risultare alto, attenzione! \n");
-        }
-	}
-	
 	notizia.setTitolo(testo);
+	notizia.setDescrizione(" ");
 	RicercaMultimediale ric = new RicercaMultimediale();
+	//Verifica se è un link
+	try {
+		EstraiFonteLink(notizia);
+	} catch (Exception e) {
+		notizia.setTitolo(testo);
+	}
+	
 	
 	//estrazione informazioni principali
-	 ArrayList<String> info = estraiInformazioni(notizia.getTitolo());
+	info = estraiInformazioni(notizia.getTitolo());
 	
 	 
 	 //Verifica esistenza notizia ed eventuale restituzione
-	 
-	 boolean trovata = false;
-	ArrayList<Fonte> fontiRicerca = db.getFontiRicercaTestuale();
-	if(!fontiRicerca.isEmpty()) {
-		
-	}
-	 
-	 
-	//Recupero fonti per ricerca
-	fonti = db.getFontiScraping(user);
-	
-	for(int i = 0; i < fonti.size(); i++) {
-		//recupero fonte per ricerca
-		FonteDiv divfonte = fonti.get(i);
-		String nomefonte = db.getNomeFontebyId(divfonte.getIdFonte());
-		Fonte fonteRicerca = db.getFonteByName(nomefonte);
-		
-		try {
-			//effettuo la ricerca e salvo i risultati
-			risultati.addAll(ric.ricercaNotizia(testo,divfonte,fonteRicerca));
+	 web = controllaNotizia(notizia, info);
+	// web.setTitolo("no-found");
+	 //se la notizia non è stata trovata
+	 if(web.getTitolo().equals("no-found") || web.getTitolo().equals("error") )
+	 {
+		 //proseguo con il web scraping
+		 
+			//Recupero fonti per ricerca
+			fonti = db.getFontiScraping(user);
 			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.err.println("Error on scraping");
-		}		
-	}
-	
-	//filtraggio news
-	if(!risultati.isEmpty())
-	{
-		for (int i = 0; i < risultati.size(); i++) {
-			Notizia notizia2 = (Notizia) risultati.get(i);
-			boolean corrisponde = filtraNotizia(notizia2, info);
-			if(corrisponde == true)
-			{
-				risultatiFiltrati.add(notizia2);
+			for(int i = 0; i < fonti.size(); i++) {
+				//recupero fonte per ricerca
+				FonteDiv divfonte = fonti.get(i);
+				String nomefonte = db.getNomeFontebyId(divfonte.getIdFonte());
+				Fonte fonteRicerca = db.getFonteByName(nomefonte);
+				System.out.println(divfonte.toString());
+				System.out.println(fonteRicerca.toString());
+				try {
+					//effettuo la ricerca e salvo i risultati
+					risultati.addAll(ric.ricercaNotizia(testo,divfonte,fonteRicerca));
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					System.err.println("Error on scraping");
+				}		
 			}
 			
-		}
-	}
-	//calcoloIndice di attendibilità
-	if(risultati.isEmpty())
-	{
-		notizia.setDescrizione("Non è stato possibile verificare la notizia inserita:\n"
-				+ "La notizia potrebbe essere inventata;\n"
-				+ "Non sono momentaneamente disponibili le fonti per verificare \n"
-				+ "Hai bloccato tutte le fonti per verificare la notizia");
-		notizia.setIndice(50);
-	}
-	else if(!risultatiFiltrati.isEmpty())
-	{
-		int decremento = 5;
-		for (int i = 0; i < risultatiFiltrati.size(); i++)
-		{
-			int indice = notizia.getIndice();
-			notizia.setIndice(indice - decremento);
-		}
-		if(notizia.getIndice() < 0)
-		{
-			notizia.setIndice(0);
-		}
-	}
+			//filtraggio news
+			if(!risultati.isEmpty())
+			{
+				for (int i = 0; i < risultati.size(); i++) {
+					Notizia notizia2 = (Notizia) risultati.get(i);
+
+						risultatiFiltrati.add(notizia2);	
+				}
+				
+				//decremento indice della notizia
+				if(!risultatiFiltrati.isEmpty())
+				{
+					//risultatiFiltrati.add(0, notizia);
+					
+					int decremento = 5;
+					for (int i = 0; i < risultatiFiltrati.size(); i++)
+					{
+						int indice = notizia.getIndice();
+						notizia.setIndice(indice - decremento);
+					}
+					if(notizia.getIndice() < 0)
+					{
+						notizia.setIndice(0);
+					}
+				}
+				//se non sono presenti risultati inerenti all'argomento
+				else {
+					notizia.setDescrizione("Non è stato possibile verificare la notizia inserita:\n"
+							+ "-La notizia potrebbe essere inventata;\n"
+							+ "-Non sono momentaneamente disponibili le fonti per verificare \n"
+							+ "-Hai bloccato tutte le fonti per verificare la notizia");
+					notizia.setIndice(50);
+				}
+				
+			}
+			//se non ci sono stati risultati sull'argomento
+			else
+			{
+				notizia.setDescrizione("Non è stato possibile verificare la notizia inserita:\n"
+						+ "-La notizia potrebbe essere inventata;\n"
+						+ "-Non sono momentaneamente disponibili le fonti per verificare \n"
+						+ "-Hai bloccato tutte le fonti per verificare la notizia");
+				notizia.setIndice(50);
+			}
+
+			
+	 }
+	 else
+	 {
+		//risultatiFiltrati.add( notizia);
+		 risultatiFiltrati.add(web);
+	 }
+	 
 	risultatiFiltrati.add(0, notizia);
+	
 	return risultatiFiltrati;
 }
 public ArrayList<Notizia> calcoloAttendibilitàNotiziaMultimediale(String link) throws IOException
@@ -222,70 +212,28 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaMultimediale(String link) 
 	  return risultati;
 
 	}
-public ArrayList<String> estraiInformazioni(String notizia) {
-    
-    //String notizia = "Silvio Berlusconi è morto nel 1950 a Milano.";
+private ArrayList<String> estraiInformazioni(String notizia) {
 
-	
-  /*  // Creazione del pipeline di Stanford CoreNLP
-    Properties props = new Properties();
-    props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
-    StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-
-    // Creazione di un oggetto Annotation per la notizia
-    Annotation annotation = new Annotation(notizia);
-
-    // Esecuzione dell'analisi
-    pipeline.annotate(annotation);
-
-    // Estrazione delle entità nominate
-    List<CoreMap> sentences = annotation.get(CoreAnnotations.SentencesAnnotation.class);
-    System.out.println("Entità nominate:");
-    for (CoreMap sentence : sentences)
-    {
-        for (CoreMap token : sentence.get(CoreAnnotations.TokensAnnotation.class)) {
-            String word = token.get(CoreAnnotations.TextAnnotation.class);
-            String nerTag = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
-            
-           
-            if (!nerTag.equals("O")) {
-                System.out.println(word + " [" + nerTag + "]");
-                informazioni += " " + word;
-            }
-
-        }
-    }*/
-	ArrayList<String> informazioni =  new ArrayList<>();
+	/*ArrayList<String> informazioni =  new ArrayList<>();
     StringTokenizer st = new StringTokenizer(notizia," ");
     while(st.hasMoreElements()) {
     	informazioni.add(st.nextToken());
     }
-    return informazioni;
+    return informazioni;*/
+	String testo = notizia;
+    String[] paroleArray = testo.split("[^a-zA-Z']+");
+    ArrayList<String> parole = new ArrayList<>();
+
+    for (String parola : paroleArray) {
+        if (!parola.isEmpty()) {
+            parole.add(parola);
+        }
+    }
+    return parole;
 }
 
-public boolean filtraNotizia(Notizia n,ArrayList<String> info) {
-	//suddivido le info ottenute in token
-	/*StringTokenizer stInfo = new StringTokenizer(info," ");
-	
-	//per ogni info, verifico che sia presente nel titolo della news almeno una di  esse
-	while(stInfo.hasMoreElements() && hasValidInfo == false) {
-		
-		String info2 = stInfo.nextToken();
-		//suddivido il titolo della notizia
-		StringTokenizer stTitle = new StringTokenizer(n.getTitolo()," ");
-		
-		while(stTitle.hasMoreElements()) {
-			
-			String title = stTitle.nextToken();
-			
-			//verifico se le info inserite corrispondono
-			if(title.equalsIgnoreCase(info2))
-			{
-				hasValidInfo = true;
-				break;
-			}
-		}
-	}*/
+private boolean filtraNotizia2_0(Notizia n,ArrayList<String> info) {
+
 	//inizializzazione parametri
 	boolean hasValidInfo = false;
 	int parolePresenti = 0;
@@ -300,13 +248,39 @@ public boolean filtraNotizia(Notizia n,ArrayList<String> info) {
 				parolePresenti++;
 		}
 	}
-	if(parolePresenti >= 2)
+	if(parolePresenti >= 2 || parolePresenti == notiziaEstratta.size())
 		hasValidInfo = true;
 	
 	return  hasValidInfo;
-}
 
-public int estrattoreIndice(String jsonFile) {
+}
+private boolean filtraNotizia1_0(Notizia n,ArrayList<String> info) {
+	
+	ArrayList<String> informazioni =  new ArrayList<>();
+    StringTokenizer st = new StringTokenizer(n.getTitolo()," ");
+    while(st.hasMoreElements()) {
+    	informazioni.add(st.nextToken());
+    }
+	boolean hasValidInfo = false;
+	int parolePresenti = 0;
+	ArrayList<String> notiziaEstratta = estraiInformazioni(n.getTitolo());
+	//per ogni parola di un titolo della notizia, controllo che almeno ce ne siano un tot ripsetto a quella cercata
+	for(int i = 0; i < notiziaEstratta.size(); i++)
+	{
+		for(int j = 0; j < info.size(); j++) {
+			String daNotiziaTrovata = notiziaEstratta.get(i);
+			String daNotiziaCercata = info.get(j);
+			if(daNotiziaTrovata.equalsIgnoreCase(daNotiziaCercata))
+				parolePresenti++;
+		}
+	}
+	if(parolePresenti >= 2 || parolePresenti == notiziaEstratta.size())
+		hasValidInfo = true;
+	
+	return  hasValidInfo;
+    
+}
+private int estrattoreIndice(String jsonFile) {
 	int indice = 0;
 	ObjectMapper objectMapper = new ObjectMapper();
 	try {
@@ -337,5 +311,184 @@ public int estrattoreIndice(String jsonFile) {
 	
 }
 
+private Notizia controllaNotizia(Notizia n,ArrayList<String> info) throws SQLException
+{
+	boolean trovata = false;
+	ArrayList<Fonte> fontiRicerca = db.getFontiRicercaTestuale();
+	Notizia notiziaWeb = new Notizia(" ", "no-found", " ", " ", " ", 0);
+	Notizia retNotizia = new Notizia();
+	int trovate = 0;
+	
+	if(!fontiRicerca.isEmpty()) {
+		try {
+        	String apiKey = "AIzaSyBOnSAuSkYJttXij0JgLpwm15SfmcPej5c";
+            String searchEngineId = "d187f3d40d0174fdd";
+          //  String query = "berlusconi è morto";
+            
+            String encodedQuery = URLEncoder.encode(n.getTitolo(), "UTF-8");
+            String url = "https://www.googleapis.com/customsearch/v1?key=" + apiKey +
+                    "&cx=" + searchEngineId + "&q=" + encodedQuery;
+
+            URL apiUrl = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
+            connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+
+                Gson gson = new Gson(); // Instantiate the Gson object
+               
+                JsonObject jsonObject = gson.fromJson(response.toString(), JsonObject.class);
+                JsonArray items = jsonObject.getAsJsonArray("items");
+                for (JsonElement item : items) {
+                	
+                	//per ogni risultato, estraggo il titolo e la fonte da qui proviene 
+                    JsonObject result = item.getAsJsonObject();
+                    String titoloWeb = result.get("title").getAsString();
+                    String linkFonteWeb = result.get("link").getAsString();
+                    notiziaWeb = new Notizia(" ",linkFonteWeb," ",linkFonteWeb," ",0);
+                    String fonte = EstraiFonteLink(notiziaWeb);
+                    notiziaWeb = new Notizia(" ",titoloWeb," ",linkFonteWeb," ",0);
+                    //filtro il testo web e verifico che corrisponda a quello che abbiamo cercato
+                    boolean corrisponde = false;
+                    boolean fonteValida = false;
+                    corrisponde = filtraNotizia2_0(notiziaWeb, info);
+                    
+                    //se c'è corrispondenza, trovo la fonte da qui proviene 
+                     if(corrisponde == true) {
+                    	
+                    	for(int i = 0; i < fontiRicerca.size(); i++) {
+                    		Fonte f = fontiRicerca.get(i);
+                    		
+                    		
+                    		
+                    		if(f.getNome().equalsIgnoreCase(fonte) || f.getUrlRicerca().equalsIgnoreCase(fonte) )
+                    		{
+                    			fonteValida = true;
+                    			notiziaWeb.setIndice((int)f.getIndice());
+                    			;
+                    			
+                    		}
+
+                    	}
+                    }
+                    
+                    System.out.println("Title: " + titoloWeb);
+                    System.out.println("Link: " + linkFonteWeb);
+                    System.out.println("Corrispondenza = " + corrisponde);
+                    System.out.println("fonteValida = " + fonteValida);
+                    if(fonteValida == true) {
+                    	trovata = true;
+                    	if(trovate == 0) {
+                    		retNotizia = new Notizia("", titoloWeb, " ", linkFonteWeb, fonte, notiziaWeb.getIndice());
+                    		try {
+                       		// URL websiteUrl = new URL(url);
+                    		
+                       		 Document document = Jsoup.connect(linkFonteWeb).get();
+                             Element imageElement = document.selectFirst("article img");
+
+                             if (imageElement != null) {
+                                 String imageUrl = imageElement.absUrl("src");
+
+                                 System.out.println("URL dell'immagine dell'articolo: " + imageUrl);
+                                 retNotizia.setImg(imageUrl);
+                             } else {
+                                 System.out.println("Nessuna immagine dell'articolo trovata.");
+                             }							
+							} catch (Exception e) {
+								System.out.println(e.getMessage());
+							}
+
+                    	}
+                    	
+                    	trovate++;
+                    	
+                    }
+                }
+            }
+            else 
+            {
+                System.out.println("Error: " + responseCode);
+                notiziaWeb = new Notizia(" ", "error", " ", " ", " ", 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            notiziaWeb = new Notizia(" ", "error", " ", " ", " ", 0);
+        }	
+	}
+	if(trovata == false || trovate < 5) {
+		System.out.println("Non è stato possibile verificare l'esistenza della notizia");
+		notiziaWeb = new Notizia(" ", "no-found", " ", " ", " ", 0);
+	}
+	else if(trovate >= 5 && trovata == true) {
+		return retNotizia;
+	}
+
+	return notiziaWeb;
+}
+
+private String EstraiFonteLink(Notizia notizia) {
+	Fonte autoreNotizia = null;
+	Fonte[] risElaborazioneAutore;
+	
+	
+	String fonte = "no-link";
+	//verifico che la notiza sia un link, recupero la fonte
+	try {
+		fonte = GestoreFonti.getHostByUrl(notizia.getTitolo());
+		//testo = temp;
+		
+	} 
+	catch (MalformedURLException e)
+	{
+		System.out.println("Not a link");
+		fonte = "no-link";
+		
+	}
+	//se il link è valido, recupero la fonte e la notizia
+	if(!fonte.equals("no-link"))
+	{
+		//recupero il titolo della notizai
+        try {
+            // Scarica il documento HTML dal URL
+            Document document = Jsoup.connect(notizia.getTitolo()).get();
+
+            // Estrae il titolo della pagina
+             notizia.setTitolo(document.title());
+
+            // Stampa il titolo
+            System.out.println("Titolo della pagina: " + notizia.getTitolo());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        autoreNotizia = new Fonte(fonte);
+        //cerco la valutazione della fonte
+        GestoreFonti gesF = new GestoreFonti();
+        risElaborazioneAutore = gesF.elaboraValutazioneFonte(autoreNotizia);
+        //stampo
+        try {
+            if(risElaborazioneAutore != null)
+            {
+            	System.out.println(risElaborazioneAutore[0].toString());
+            	System.out.println(risElaborazioneAutore[1].toString());
+            	notizia.setIndice((int) (risElaborazioneAutore[0].getIndice()));
+            	notizia.setDescrizione("La notizia proviene dalla black list di uno dei nostri siti esterni "
+            				+ "Nonostante l'indice di attendibilità possa risultare alto, attenzione! \n");
+            }       	
+        }catch (Exception e) {
+			// TODO: handle exception
+		}
+
+	}
+	System.out.println("Estratta = " + fonte);
+	return fonte;
+}
 
 }

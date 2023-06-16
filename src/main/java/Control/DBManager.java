@@ -337,7 +337,7 @@ public int inserisciUtente(Utente user) throws Exception {
 	
 	public ArrayList<Fonte> getFontiRicercaTestuale() throws SQLException{
 		ArrayList<Fonte> elenco = new ArrayList<Fonte>();
-		String sql= "SELECT * from fonte where id not in ( select fonte from blacklist )";
+		String sql= "SELECT * from fonte where id_fonte not in ( select fonte from blacklist )";
 		rs=query.executeQuery(sql);
 		Fonte f;
 		while(rs.next())
