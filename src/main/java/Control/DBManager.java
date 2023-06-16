@@ -322,7 +322,7 @@ public int inserisciUtente(Utente user) throws Exception {
 	}
 
 
-	public ArrayList<FonteDiv> getFontiRicercaTestuale(Utente user) throws SQLException {
+	public ArrayList<FonteDiv> getFontiScraping(Utente user) throws SQLException {
 		ArrayList<FonteDiv> elenco = new ArrayList<FonteDiv>();
 		String sql= "SELECT * FROM divFonte where fonte not in ( select fonte from filtroFonti where utente = '" + user.getUsername() +"')";
 		rs=query.executeQuery(sql);
@@ -334,6 +334,21 @@ public int inserisciUtente(Utente user) throws Exception {
 		}
 		return elenco;
 	}
+	
+	public ArrayList<Fonte> getFontiRicercaTestuale() throws SQLException{
+		ArrayList<Fonte> elenco = new ArrayList<Fonte>();
+		String sql= "SELECT * from fonte where id not in ( select fonte from blacklist )";
+		rs=query.executeQuery(sql);
+		Fonte f;
+		while(rs.next())
+		{
+			f = new Fonte(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getInt(4));
+			elenco.add(f);
+		}
+		
+		return elenco;
+	}
+	
 	public void bloccaFontePerUtente(Fonte f,Utente user) throws SQLException {
 		String sql = "INSERT INTO filtroFonti values (?,?)";
 		PreparedStatement ps = connessione.prepareStatement(sql);
@@ -363,14 +378,4 @@ public int inserisciUtente(Utente user) throws Exception {
 		ps.executeUpdate();
 		
 	}	
-
-
-
-
-
-
-
-//-----------------------------------------------
-
-
 }

@@ -74,7 +74,7 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 		fonte = "no-link";
 		
 	}
-	//se il link non è valido
+	//se il link è valido, recupero la fonte e la notizia
 	if(!fonte.equals("no-link"))
 	{
 		//recupero il titolo della notizai
@@ -111,8 +111,18 @@ public ArrayList<Notizia> calcoloAttendibilitàNotiziaTestuale(String testo,Uten
 	//estrazione informazioni principali
 	 ArrayList<String> info = estraiInformazioni(notizia.getTitolo());
 	
+	 
+	 //Verifica esistenza notizia ed eventuale restituzione
+	 
+	 boolean trovata = false;
+	ArrayList<Fonte> fontiRicerca = db.getFontiRicercaTestuale();
+	if(!fontiRicerca.isEmpty()) {
+		
+	}
+	 
+	 
 	//Recupero fonti per ricerca
-	fonti = db.getFontiRicercaTestuale(user);
+	fonti = db.getFontiScraping(user);
 	
 	for(int i = 0; i < fonti.size(); i++) {
 		//recupero fonte per ricerca
@@ -326,8 +336,6 @@ public int estrattoreIndice(String jsonFile) {
 	return indice;
 	
 }
-/*public Notizia algCalcoloIndice(Notizia n, ArrayList<Notizia> risultati)
-{
-	
-}*/
+
+
 }

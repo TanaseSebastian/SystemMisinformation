@@ -15,7 +15,8 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #ffffff00">
       <a class="navbar-brand" href="#">
     <img src="img/icon.png" width="50" height="50" class="d-inline-block align-top" alt="">
   </a>
