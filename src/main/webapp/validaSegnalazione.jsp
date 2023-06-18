@@ -2,7 +2,7 @@
     pageEncoding="ISO-8859-1"%>
   <%
 Segnalazione segnalazione=(Segnalazione)session.getAttribute("segnalazione");
-  DBManager db = new DBManager();
+  DBFonti db = new DBFonti();
 %>
 <!DOCTYPE html>
 <html>

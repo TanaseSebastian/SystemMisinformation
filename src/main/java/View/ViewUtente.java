@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import Control.CalcoloAttendibilitàNotizia;
+import Control.GestoreNotizie;
+import Control.DBFonti;
 import Control.GestoreAutenticazione;
 import Control.GestoreFonti;
 import Control.DBManager;
@@ -69,9 +70,9 @@ public class ViewUtente extends HttpServlet {
 			String notizia = request.getParameter("notizia");
 			if(tipoRicerca.equals("testuale")) {
 				//Creo oggetto per calcolare indice
-				CalcoloAttendibilitàNotizia cff = null;
+				GestoreNotizie cff = null;
 				try {
-					cff = new CalcoloAttendibilitàNotizia();
+					cff = new GestoreNotizie();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -90,7 +91,7 @@ public class ViewUtente extends HttpServlet {
 						user = (Utente) request.getAttribute("utente");
 					}*/
 					//calcolo indice attendibilità
-					risultati = cff.calcoloAttendibilitàNotiziaTestuale(notizia,user);
+					risultati = cff.calcoloAttendibilitàNotiziaTestuale2(notizia,user);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -107,9 +108,9 @@ public class ViewUtente extends HttpServlet {
 			}
 			else if (tipoRicerca.equals("multimedia")) {
 				ArrayList<Notizia> risultati = new ArrayList<>();
-				CalcoloAttendibilitàNotizia cff = null;
+				GestoreNotizie cff = null;
 				try {
-					cff = new CalcoloAttendibilitàNotizia();
+					cff = new GestoreNotizie();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -146,9 +147,9 @@ public class ViewUtente extends HttpServlet {
 			int id = Integer.parseInt(request.getParameter("id"));
 			Utente user3 = (Utente)request.getSession().getAttribute("utente");
 					
-			DBManager db2;
+			DBFonti db2;
 			try {
-				db2 = new DBManager();
+				db2 = new DBFonti();
 				String nome = db2.getNomeFontebyId(id);
 				Fonte f = db2.getFonteByName(nome);
 		
@@ -261,9 +262,9 @@ public class ViewUtente extends HttpServlet {
 				int idFonte = Integer.parseInt(request.getParameter("idFonteDaBloccare"));
 				Utente user2 = (Utente)request.getSession().getAttribute("utente");
 						
-			DBManager db;
+			DBFonti db;
 			try {
-				db = new DBManager();
+				db = new DBFonti();
 				String nome = db.getNomeFontebyId(idFonte);
 				Fonte f = db.getFonteByName(nome);
 			

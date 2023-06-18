@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import Model.Fonte;
 public class GestoreFonti {
 	private RicercaMultimediale search;
-	private DBManager db;
+	private DBFonti db;
 	
 	
 	public GestoreFonti() {
@@ -62,7 +62,7 @@ public class GestoreFonti {
 		/*Una volta estratto il nome della fonte e / o verificato il link
 		 *cerco la fonte nel db*/
 		try {
-			db = new DBManager();
+			db = new DBFonti();
 			//System.out.println(f.toString());
 			fontedaDB = db.getFonteByName(f.getNome());
 			

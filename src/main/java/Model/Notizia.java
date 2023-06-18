@@ -63,6 +63,11 @@ public class Notizia {
 	public void setAutore(String autore) {
 		this.autore = autore;
 	}
+	@Override
+	public String toString() {
+		return "Notizia [img=" + img + ", titolo=" + titolo + ", descrizione=" + descrizione + ", autore=" + autore
+				+ ", data=" + data + ", indice=" + indice + "]";
+	}
 	
 	
 }

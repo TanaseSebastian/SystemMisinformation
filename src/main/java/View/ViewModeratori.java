@@ -66,11 +66,13 @@ public class ViewModeratori extends HttpServlet {
 		case "conferma e valida segnalazione":
 			//mi prendo id segnalazione
 			String id_segnalazione1 = request.getParameter("id");
+			String nomeFonte = request.getParameter("fonte");
 			//deve cambiare lo stato della segnalazione
-			DBManager db = null;
+			DBFonti db = null;
 			try {
-				db = new DBManager();
+				db = new DBFonti();
 				db.modificaStatoSegnalazione(Integer.parseInt(id_segnalazione1), 1);
+				db.diminuisciIndiceFonte(nomeFonte);
 				//rimandiamo su segnalazioni
 				response.sendRedirect("segnalazioni.jsp");
 			} catch (Exception e) {
@@ -81,10 +83,11 @@ public class ViewModeratori extends HttpServlet {
 		case "declina segnalazione":
 			//mi prendo id segnalazione
 			String id_segnalazione2 = request.getParameter("id");
+			DBManager db2 = null;
 			//deve cambiare lo stato della segnalazione
 			try {
-				db = new DBManager();
-				db.modificaStatoSegnalazione(Integer.parseInt(id_segnalazione2), 2);
+				db2 = new DBManager();
+				db2.modificaStatoSegnalazione(Integer.parseInt(id_segnalazione2), 2);
 				//rimandiamo su segnalazioni
 				response.sendRedirect("segnalazioni.jsp");
 			} catch (NumberFormatException e) {

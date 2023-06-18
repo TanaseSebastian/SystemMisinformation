@@ -1,7 +1,7 @@
 <%@ page language="java" import="java.util.*,Model.*,Control.*" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
   <%
-  DBManager db = new DBManager();
+  DBFonti db = new DBFonti();
 ArrayList<Fonte> elencoFonti = db.getFonti();
 Fonte f;
 Utente user=(Utente)session.getAttribute("utente");

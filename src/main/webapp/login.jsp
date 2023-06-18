@@ -57,5 +57,6 @@
     <center><h6 style="color:white">Non sei ancora registrato? <a href="reg.html" style="color:#fff" >Clicca qui</a></h6>< </center>
   </form>
 </div>
+<%@include file="footer.jsp"%>
 </body>
 </html>

@@ -1,6 +1,6 @@
---  create database MYSINFORMATION_DB;
+create database MYSINFORMATION_DB;
 use MYSINFORMATION_DB;
--- drop database MYSINFORMATION_DB;
+-- drop database MYSINFORMATION_DB
 create table utente (
 username varchar(50) primary key,
 email varchar(50),
@@ -11,8 +11,16 @@ create table fonte (
 id_fonte int auto_increment primary key,
 nome varchar(50),
 url varchar(100),
-indice int default 100
+indice float
 );
+
+
+create table valutazioniFonti(
+fonte int,
+urlBlackList varchar(50),
+foreign key (fonte ) references fonte(id_fonte)
+);
+
 
 create table segnalazione (
 id_segnalazione int auto_increment primary key,
@@ -25,7 +33,6 @@ foreign key (mittente) REFERENCES utente(username),
 foreign key (fonte_segnalata) references fonte(id_fonte)
 );
 
-
 create table filtroFonti (
 fonte int,
 utente varchar(50),
@@ -33,36 +40,63 @@ foreign key (utente) REFERENCES utente(username),
 foreign key (fonte) references fonte(id_fonte)
 );
 
-create table whiteList(
+
+create table blackList(
 fonte int,
 foreign key (fonte ) references fonte(id_fonte)
 );
 
-create table blackList(
+create table divFonte(
 fonte int,
-foreign key (fonte) references fonte(id_fonte)
+divNotizie varchar(50),
+divNotizia varchar(50),
+divTitolo varchar(50),
+divAutore varchar(50),
+divData varchar(50),
+divDescrizione varchar(50),
+divImg varchar(50),
+foreign key (fonte ) references fonte(id_fonte)
 );
 
-
-insert into utente values ("Seb","p@p","java",2);
+insert into utente values ("admin","p@p","root",2);
 insert into utente values ("Fabian","p@p","java",1);
 insert into utente values ("utente","p@p2","java",0);
-insert into utente values ("Sebastian","p@p2","java",0);
 
-insert into fonte(nome,url) values("larepubblica","ww");
-insert into fonte(nome,url) values("bufale","bufale.net");
+insert into fonte(nome,url,indice) values("larepubblica","https://ricerca.repubblica.it/ricerca/repubblica?query=",100);
+insert into fonte(nome,url,indice) values("bufale","https://www.bufale.net/?s=",100);
+insert into fonte(nome,url,indice) values("butac","https://www.butac.it/search/",100);
+insert into fonte(nome,url,indice) values("factanews","https://facta.news/?s=",100);
+insert into fonte(nome,url,indice) values("www.lercio.it","",20);
 
--- UPDATE fonte set indice = indice + 1 where nome = "La Repubblica";
-
-
-
-select *  from fonte;
-drop table fonte;
+insert into divFonte values (4,"edgtf-post-title-area-inner","edgtf-post-content","entry-title edgtf-post-title",
+"news__author","edgtf-post-info","edgtf-post-text-main",
+"attachment-full size-full wp-post-image");
+insert into divFonte values (2,"title","left-column col-md-8","title",
+"news__author","info author col-md-6 col-sm-6 col-xs-6","text-article",
+"img-responsive wp-post-image");
+insert into divFonte values (3,"title j-title","previewArticle j-previewArticle","titleArticle j-Article",
+"news__author","datetime","post-thumbnail",
+"img-responsive wp-post-image");
+update fonte set indice = 50 where fonte.nome = "www.lercio.it";
+insert into valutazioniFonti(fonte,urlBlackList) values (2,"https://www.bufale.net/the-black-list-la-lista-nera-del-web/");
+insert into valutazioniFonti(fonte,urlBlackList) values (3,"https://www.butac.it/the-black-list/");
+select * from fonte;
 select * from utente;
-select * from segnalazione;
 
-
-
+SELECT nome,indice FROM Fonte WHERE nome = "larepubblica";
+SELECT * FROM divFonte where fonte not in ( select fonte from filtroFonti where utente = "Fabian");
+SELECT valutazioniFonti.urlBlackList,fonte.nome
+ FROM valutazioniFonti join fonte 
+ on valutazioniFonti.fonte = fonte.id_fonte;
+ 
+ select id_fonte,nome,indice from fonte join filtroFonti
+ on fonte.id_fonte = filtroFonti.fonte
+ where filtroFonti.utente = 'Fabian';
+ 
+ insert into filtroFonti values(2,"Fabian");
+ select * from filtroFonti;
+ 
+ 
 insert into fonte(nome,url) values("Corriere della Sera","www.corriere.it");
 insert into fonte(nome,url) values("La Repubblica","www.repubblica.it");
 insert into fonte(nome,url) values("La Stampa","www.lastampa.it");

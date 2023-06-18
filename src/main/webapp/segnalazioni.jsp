@@ -47,15 +47,15 @@ if(righe==null){
 		<!-- Dynamic Table Full -->
 		<div class="block">
 			<div class="block-header block-header-default">
-				<h3 class="block-title">
+				<h3 class="block-title" style="color: white">
 					Tabella SEGNALAZIONI
 				</h3>
 			</div>
 			<div class="table-responsive">
 			<form id="form" method="post">
 				<!-- DataTables -->
-				<table class="table table-bordered table-striped table-vcenterd"
-					id="dataTable" width="100%" cellspacing="0"
+				<table class="table  table-striped table-vcenterd" style="background-color: white"
+					id="dataTable" width="100%" cellspacing="0" 
 					data-page-length=<%=righe%>>
 					<%request.getSession().setAttribute("numeroRighe", "10"); %>
 					<thead>
@@ -69,7 +69,7 @@ if(righe==null){
 						</div>
 						<div style="margin-bottom: 10px; margin-top: 20px;"">
 						</div>
-						<tr>
+						<tr style = "font-color: white">
 				
 							<th><input type="checkbox" id="checkboxAll" onclick='$(".check").prop("checked",$ (this).prop("checked"));'>Seleziona tutto</th>
 							<th>Dettagli</th>

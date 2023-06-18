@@ -9,7 +9,7 @@
 <body>
 <%@include file="header.jsp"%>
 <%
-DBManager db = new DBManager();
+DBFonti db = new DBFonti();
 ArrayList<Fonte> elencoFonti = db.getFonti();
 Utente user = (Utente) session.getAttribute("utente");
 ArrayList<Fonte> fontiBloccate = db.getFontiBloccate(user);

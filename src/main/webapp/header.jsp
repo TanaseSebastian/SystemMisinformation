@@ -10,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link  rel="stylesheet" href="css/risNews.css" type="text/css">
 <meta charset="ISO-8859-1">
 <title>Index Page</title>
 
@@ -19,7 +20,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #ffffff00;">
       <a class="navbar-brand" href="#">
-    <img src="img/icon.png" width="50" height="50" class="d-inline-block align-top" alt="">
+    <img src="img/MYS.png" width="50" height="50" class="d-inline-block align-top" alt="">
   </a>
         <a class="navbar-brand" style="color: white" href="#">MYSINFORMATION</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

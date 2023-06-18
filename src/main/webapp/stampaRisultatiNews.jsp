@@ -14,19 +14,41 @@ ArrayList<Notizia> risultati = (ArrayList<Notizia>)session.getAttribute("risulta
 Notizia cercata = (Notizia) session.getAttribute("notiziaCercata"); 
 String tipologia = request.getParameter("tiporisultato");
 %>
-<center>	<div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
-  <div class="card-header">Hai cercato:</div>
-  <div class="card-body">
-  <%if(tipologia.equals("img")){ %>
-  	<img alt="" src="<%=cercata.getImg()%>" width="300" height="300">
-  <%}
-    else {%>
-    <h5 class="card-title"><%=cercata.getTitolo()%></h5>
-    <%} %>
-   <div class="w3-container w3-blue" id = "indexBar" style="width:<%=cercata.getIndice()%>%"><%=cercata.getIndice()%></div>
-  </div>
-</div></center>
-	<%=cercata.getDescrizione()%>
+
+    <div class="topDiv">
+
+        <center><div class="cardCercata">
+            <div class="cardCercata__content">
+                <h2 class = "titleSearched">HAI CERCATO:</h2> 
+                 <%if(tipologia.equals("img")){ %>
+  					<img alt="" src="<%=cercata.getImg()%>" width="300" height="300">
+  				<%}
+                 else {%>
+                <h3 class="titleNews"><%=cercata.getTitolo()%></h3>
+                 <%} %>
+               <h4 class="titleNews"><%=cercata.getDescrizione() %></h4>
+                <br>
+                <center><div class="w3-container w3-blue" id = "indexBar" style="width:<%=cercata.getIndice()%>%"><%=cercata.getIndice()%></div></center>
+            </div>
+            
+        </div>
+   		</center>
+
+    </div>
+    <div class="rightDiv" >
+        <br>
+        <center>
+        <button class="button">
+            <span class="button_lg">
+                <span class="button_sl"></span>
+                <span class="button_text">INDIETRO</span>
+            </span>
+        </button>
+    </center>
+        <br>
+
+
+   
 <%if(risultati.isEmpty()) { %>
 
 <div class="alert alert-danger" role="alert">
@@ -46,10 +68,9 @@ else {
   		Risultati trovati: <%=risultati.size()%>
 		</div>
 	
-<div class="container" style="width:100%;text-align: center">
 	<nav aria-label="...">
 
-  <ul class="pagination pagination-lg">
+  <center><ul class="pagination pagination-lg">
 <%
 	int pagineTot = (int) Math.ceil((double)risultati.size() / pageSize);
 	for (int i = 1; i <= pagineTot; i++) 
@@ -58,9 +79,9 @@ else {
 
 		
 	<% } %>
-	  </ul>
+	  </ul></center>
 </nav>
-</div>		
+		
 		<%
 		int offset = 0;
 		int rows = visualizzaRisultati.size() / 3;
@@ -70,19 +91,22 @@ else {
 			Notizia news = (Notizia)visualizzaRisultati.get(i);
 			%>
 
-			<div class="card" style="float:left" >
-			  <div class="card-body">
-			    <h5 class="card-title"><%=news.getTitolo()%></h5>
-			    <!--  <p class="card-text"><%=news.getDescrizione()%></p>-->
-			    <p class="card-text"><small class="text-muted"><%=news.getData()%></small></p>
-			  </div>
-			  <img class="card-img-bottom" src="<%=news.getImg()%>" alt="Img non disponibile" width="500" height="500" >
-			  <a href="#" class="btn btn-primary">Di: <%=news.getAutore()%></a>
-			</div>
-			
+        <div class="news" style=" background-color: rgba(0, 0, 0, 0.842)">
+          <div class="card">
+            <div class="card2" style="background-image: url(<%=news.getImg()%>)">
+
+            </div>
+          </div> 
+          <div class="new-info">
+          <h4 class="title"> <%=news.getTitolo()%></h4> 
+          <h4 class="title"> <%=news.getDescrizione()%></h4>             
+          <a href="" class="linkFonte">DI <strong><%=news.getAutore()%></strong></a>
+        </div>
+        </div>			
 			<%}%>
 		
 <%} catch(Exception e){} %>
 
 <% } %>
+ </div>
 	<script type="text/javascript" src = "js/progressBarColor.js"></script>
