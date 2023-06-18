@@ -21,7 +21,7 @@ Segnalazione segnalazione=(Segnalazione)session.getAttribute("segnalazione");
 	
 	<div class="content" style="padding:5%;">
 	<div class="block">
-	<form action= "viewmoderatori" METHOD = "POST" onSubmit="if(!confirm('Sei sicuro di voler confermare questa operazione?')){return false;}">
+	<form action= "viewSegnalazioni" METHOD = "POST" onSubmit="if(!confirm('Sei sicuro di voler confermare questa operazione?')){return false;}">
 	<input class="form-control" name="id" value=<%= segnalazione.getIdSegnalazione()%> hidden readonly></input>
 	<div class="form-group">
     <label for="mittente">Mittente</label>
@@ -29,7 +29,7 @@ Segnalazione segnalazione=(Segnalazione)session.getAttribute("segnalazione");
   </div>
   <div class="form-group">
     <label for="exampleFormControlSelect1">Fonte</label>
-    <input class="form-control" name="mittente" value=<%=db.getNomeFontebyId(segnalazione.getIdFonteSegnalata())%> readonly></input>
+    <input class="form-control" name="fonte" value=<%=db.getNomeFontebyId(segnalazione.getIdFonteSegnalata())%> readonly></input>
   </div>
 
  <label for="titolo">Titolo</label>
